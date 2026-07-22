@@ -1,0 +1,80 @@
+---
+import { getEntry } from 'astro:content';
+import { url } from '../lib/url';
+
+const event = await getEntry('event', 'india-2026');
+const name = event?.data.name ?? 'UbuCon India';
+const year = new Date().getFullYear();
+---
+
+<footer class="c-footer">
+  <div class="c-footer__inner">
+    <div>
+      <p class="c-footer__brand">{name}</p>
+      <p class="c-footer__tag">{event?.data.tagline}</p>
+    </div>
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href={url('/')}>Home</a></li>
+        <li><a href={url('/about')}>About</a></li>
+        <li><a href="https://ubuntu.com/community" rel="noopener" target="_blank">Ubuntu community</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="c-footer__inner c-footer__legal">
+    <p>
+      © {year} {name}. Content licensed under
+      <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="noopener" target="_blank">CC BY-SA 4.0</a>.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .c-footer {
+    background: var(--u-aubergine);
+    color: #fff;
+    margin-top: 2rem;
+    padding: 3rem 0 2rem;
+  }
+  .c-footer__inner {
+    max-width: var(--u-maxw);
+    margin: 0 auto;
+    padding-inline: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2rem;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .c-footer__brand {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+  .c-footer__tag {
+    opacity: 0.8;
+  }
+  .c-footer nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
+  .c-footer a {
+    color: #fff;
+    text-decoration: none;
+  }
+  .c-footer a:hover {
+    color: var(--u-orange);
+    text-decoration: underline;
+  }
+  .c-footer__legal {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 0.85rem;
+    opacity: 0.75;
+  }
+</style>

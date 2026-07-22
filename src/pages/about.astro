@@ -1,0 +1,170 @@
+---
+import { getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { url } from '../lib/url';
+import aboutAudience from '../assets/about-audience.jpg';
+import aboutSpeakers from '../assets/about-speakers.png';
+
+const event = await getEntry('event', 'india-2026');
+const e = event!.data;
+
+const mission = [
+  { icon: 'mortarboard-fill', label: 'Learn' },
+  { icon: 'people-fill', label: 'Collaborate' },
+  { icon: 'terminal', label: 'Contribute' },
+  { icon: 'star-fill', label: 'Inspire' },
+];
+---
+
+<Base title="About" description="About UbuCon India 2026 and its mission.">
+  <!-- ─────────── About + Mission ─────────── -->
+  <section class="p-strip">
+    <div class="u-container about">
+      <div>
+        <p class="eyebrow">{e.eyebrow}</p>
+        <h1 class="h-xl"><span class="u-aubergine">About</span> <span class="u-accent">UbuCon India</span></h1>
+        <p class="body">
+          UbuCon India is the annual Ubuntu India Community Conference that brings together open source
+          enthusiasts, developers, designers, makers and organizations to share knowledge, collaborate
+          and build the future.
+        </p>
+        <h2 class="h-md">Our Mission</h2>
+        <p class="body">To grow and connect the Ubuntu community across India — welcoming newcomers, sharing knowledge, and giving contributors a place to meet in person. The event is organised by volunteers and is open to everyone.</p>
+        <ul class="mission">
+          {mission.map((m) => (
+            <li><Icon name={m.icon} class="i-accent" size={22} /> {m.label}</li>
+          ))}
+        </ul>
+        <div class="about__cta">
+          <a class="p-button--positive has-icon" href={e.ticketUrl} rel="noopener" target="_blank">
+            <span>Register Now</span><Icon name="arrow-up-right" size={16} />
+          </a>
+          <a class="p-button has-icon" href={url('/')}>
+            <span>Back to Home</span><Icon name="arrow-left" size={16} />
+          </a>
+        </div>
+      </div>
+      <div class="about__media">
+        <span class="about__sun" aria-hidden="true"></span>
+        <Image class="about__audience" src={aboutAudience} alt="UbuCon India audience" width={620} />
+        <Image class="about__speakers" src={aboutSpeakers} alt="Speakers at UbuCon India" width={260} />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .u-container {
+    max-width: var(--u-maxw);
+    margin: 0 auto;
+    padding-inline: 1.5rem;
+  }
+  .u-accent { color: var(--u-orange); }
+  .u-aubergine { color: var(--u-aubergine); }
+  :global(.i-accent) { color: var(--u-orange); }
+
+  .eyebrow {
+    color: var(--u-orange);
+    font-weight: 600;
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+  }
+  .h-xl {
+    font-size: clamp(2rem, 3.4vw, 3.125rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+  .h-md {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--u-aubergine);
+    margin: 1.75rem 0 0.5rem;
+  }
+  .body {
+    color: #111;
+    font-size: 1.125rem;
+    line-height: 1.55;
+    max-width: 34rem;
+  }
+  .has-icon {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  .mission {
+    list-style: none;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+  }
+  .mission li {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: var(--u-aubergine);
+  }
+  .about__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.75rem;
+  }
+  .about__media {
+    position: relative;
+    min-height: 420px;
+  }
+  .about__sun {
+    position: absolute;
+    top: 0;
+    left: 40%;
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
+    background: var(--u-orange);
+  }
+  .about__audience {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 78%;
+    height: auto;
+    border-radius: 38px;
+    object-fit: cover;
+  }
+  .about__speakers {
+    position: absolute;
+    right: 0;
+    top: 20px;
+    width: 42%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 6px solid #fff;
+  }
+
+  @media (max-width: 900px) {
+    .about { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .u-container { padding-inline: 1.15rem; }
+    .mission { grid-template-columns: 1fr; }
+    .about__cta { flex-direction: column; align-items: stretch; }
+    .about__cta .p-button,
+    .about__cta .p-button--positive { justify-content: center; }
+    .about__media { min-height: 340px; }
+  }
+</style>

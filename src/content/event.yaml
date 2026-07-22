@@ -1,0 +1,16 @@
+# Single source of truth for event details. Edit here, not in templates.
+india-2026:
+  name: UbuCon India 2026
+  edition: "2026"
+  startDate: 2026-11-14
+  endDate: 2026-11-15
+  venue: To be announced
+  city: Bengaluru, India
+  eyebrow: The Ubuntu India Community Conference
+  tagline: Building together, for a human future.
+  intro: >-
+    Join Ubuntu enthusiasts, developers, open source contributors and innovators
+    from across India and the world.
+  ticketUrl: https://konfhub.com/ubucon-india-2026
+  cfpUrl: https://konfhub.com/ubucon-india-2026
+  cfpDeadline: 2026-09-30

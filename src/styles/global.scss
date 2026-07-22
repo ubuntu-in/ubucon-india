@@ -1,0 +1,17 @@
+// UbuCon India 2026 — global stylesheet.
+// Strict Vanilla Framework (Canonical). No custom design system.
+// ponytail: full framework include; prune to used patterns if CSS weight matters.
+@import 'vanilla-framework';
+@include vanilla;
+
+// UbuCon India brand tokens (Ubuntu palette). Used by scoped component styles.
+:root {
+  --u-orange: #e95420; // Ubuntu orange (exact, from Figma)
+  --u-orange-dark: #c7431a;
+  --u-aubergine: #2c001e; // Ubuntu aubergine — headings, panels, footer
+  --u-mute: #56334b; // muted aubergine (logo "2026", secondary)
+  --u-green: #0e8420; // Vanilla positive green (Register CTA)
+  --u-pink: #fceee9; // Call-for-speakers panel tint
+  --u-placeholder: #d9d9d9; // grey image placeholders (matches Figma)
+  --u-maxw: 1232px; // Figma nav/content max width
+}

@@ -1,0 +1,28 @@
+# Previous-edition look-back shown on the home page.
+# Edit this file + drop images in public/img/<edition>/ — never touch the template.
+india-2025:
+  edition: "2025"
+  eyebrow: "Last year at UbuCon India 2025"
+  heading: "A look back at an unforgettable journey"
+  stats:
+    - n: "1200+"
+      label: Attendees
+    - n: "35+"
+      label: Speakers
+    - n: "28"
+      label: Sessions
+  # Real photos: drop files in public/img/2025/ and update src paths below.
+  # 5 images recommended (desktop grid uses 5, mobile shows 1).
+  gallery:
+    - src: /img/2025/keynote.jpg
+      alt: UbuCon India 2025 keynote hall
+    - src: /img/2025/workshop.jpg
+      alt: Hands-on workshop session
+    - src: /img/2025/community.jpg
+      alt: Community networking area
+    - src: /img/2025/bof.jpg
+      alt: Birds-of-a-feather discussion
+    - src: /img/2025/group.jpg
+      alt: Group photo of attendees
+  # Link to a photo album, recap post, or video. Omit if none yet.
+  highlightsUrl: https://photos.app.goo.gl/example

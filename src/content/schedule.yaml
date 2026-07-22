@@ -1,0 +1,9 @@
+# Placeholder session. Add real sessions once the schedule is set.
+# `speaker` references a speakers entry id (the yaml filename without extension).
+- id: opening
+  title: Opening keynote
+  speaker: placeholder
+  track: Main
+  start: 2026-11-14T10:00:00+05:30
+  end: 2026-11-14T10:45:00+05:30
+  room: Main hall

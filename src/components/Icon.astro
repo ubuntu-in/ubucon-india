@@ -1,0 +1,23 @@
+---
+import { readFileSync } from 'node:fs';
+
+// Inlines a Bootstrap Icons glyph (the set the Figma design uses) so it inherits
+// `currentColor` and needs no runtime JS. Read at build from the installed package.
+interface Props {
+  name: string;
+  size?: number | string;
+  label?: string;
+  class?: string;
+}
+const { name, size = '1em', label, class: klass } = Astro.props;
+const dim = typeof size === 'number' ? `${size}px` : size;
+
+let svg = readFileSync(`node_modules/bootstrap-icons/icons/${name}.svg`, 'utf8');
+const a11y = label ? `role="img" aria-label="${label}"` : 'aria-hidden="true" focusable="false"';
+svg = svg.replace(
+  '<svg',
+  `<svg class="${klass ?? ''}" style="width:${dim};height:${dim};flex:none" ${a11y}`,
+);
+---
+
+<Fragment set:html={svg} />

@@ -1,0 +1,7 @@
+# Placeholder — one entry so the schema is exercised. Add real speakers as
+# src/content/speakers/<slug>.yaml when the CFP closes.
+name: To Be Announced
+title: Speaker
+org: ""
+bio: Speaker line-up announced after the call for proposals closes.
+featured: false

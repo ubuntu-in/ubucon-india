@@ -1,0 +1,540 @@
+---
+import { getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { url } from '../lib/url';
+import heroArt from '../assets/hero-bengaluru.png';
+
+const event = await getEntry('event', 'india-2026');
+const e = event!.data;
+
+const lookback = await getEntry('lookback', 'india-2025');
+const lb = lookback!.data;
+
+const day = (d: Date) => d.getUTCDate();
+const monthYear = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(e.endDate);
+const dates = `${day(e.startDate)} - ${day(e.endDate)} ${monthYear}`;
+const cfpDeadline = e.cfpDeadline
+  ? new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(e.cfpDeadline)
+  : null;
+
+const highlights = ['Inspiring Talks', 'Hands-on Workshops', 'Community connect'];
+const cfpTypes = [
+  { icon: 'chat-left-text-fill', label: 'Talks' },
+  { icon: 'people-fill', label: 'Workshops' },
+  { icon: 'lightning-charge-fill', label: 'Lightning Talks' },
+];
+---
+
+<Base>
+  <!-- ─────────── Hero ─────────── -->
+  <section class="p-strip">
+    <div class="u-container hero">
+      <div class="hero__copy">
+        <p class="eyebrow">{e.eyebrow}</p>
+        <h1 class="hero__title"><span class="u-aubergine">UbuCon</span> <span class="u-accent">India {e.edition}</span></h1>
+        <p class="hero__tagline">{e.tagline}</p>
+        <p class="hero__intro">{e.intro}</p>
+        <div class="hero__meta">
+          <span><Icon name="calendar-event-fill" class="i-accent" size={18} /> {dates}</span>
+          <span><Icon name="geo-alt-fill" class="i-accent" size={18} /> {e.city}</span>
+        </div>
+        <div class="hero__cta">
+          <a class="p-button--positive has-icon" href={e.ticketUrl} rel="noopener" target="_blank">
+            <span>Register Now</span><Icon name="arrow-up-right" size={16} />
+          </a>
+          <a class="p-button has-icon" href={url('/about')}>
+            <span>Learn More</span><Icon name="arrow-right" size={16} />
+          </a>
+        </div>
+      </div>
+      <Image class="hero__art" src={heroArt} alt="Illustration of Bengaluru landmarks" widths={[500, 700]} sizes="(max-width: 900px) 100vw, 600px" />
+    </div>
+  </section>
+
+  <!-- ─────────── Conference Highlights ─────────── -->
+  <section class="p-strip">
+    <div class="u-container highlights">
+      <h2 class="h-xl highlights__title"><span class="u-aubergine">Conference</span> <span class="u-accent">Highlights</span></h2>
+      <div class="highlights__grid">
+        {highlights.map((h) => (
+          <div class="card"><span class="card__label">{h}</span></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── Last year 2025 ─────────── -->
+  <section class="p-strip">
+    <div class="u-container">
+      <div class="panel panel--aubergine">
+        <div>
+          <p class="eyebrow">{lb.eyebrow}</p>
+          <h2 class="h-xl u-white">{lb.heading}</h2>
+          <ul class="stats">
+            {lb.stats.map((s) => (
+              <li>
+                <Icon name="people-fill" class="i-accent" size={30} />
+                <strong>{s.n}</strong>
+                <span>{s.label}</span>
+              </li>
+            ))}
+          </ul>
+          <a class="p-button has-icon panel__cta" href={lb.highlightsUrl ?? '#'}>
+            <span>View {lb.edition} Highlights</span><Icon name="arrow-right" size={16} />
+          </a>
+        </div>
+        <div class="gallery">
+          {lb.gallery.map((g) => (
+            <img class="gallery__img" src={url(g.src)} alt={g.alt} loading="lazy" />
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── Call for speakers ─────────── -->
+  <section class="p-strip">
+    <div class="u-container">
+      <div class="panel panel--pink cfp">
+        <div class="cfp__mic" aria-hidden="true"><Icon name="mic-fill" class="i-accent" size={44} /></div>
+        <div class="cfp__body">
+          <p class="eyebrow">Call for Speakers</p>
+          <h2 class="h-xl">Share your voice.<br />Inspire thousands.</h2>
+          <p class="body">We are looking for passionate speakers to share their ideas, stories and expertise with the open source community.</p>
+        </div>
+        <div class="cfp__aside">
+          <ul class="cfp__types">
+            {cfpTypes.map((t) => (
+              <li><Icon name={t.icon} class="i-accent" size={18} /> {t.label}</li>
+            ))}
+          </ul>
+          {cfpDeadline && <p class="cfp__open"><strong>CFP is open now!</strong><br />Deadline: {cfpDeadline}</p>}
+          <a class="p-button--positive has-icon cfp__submit" href={e.cfpUrl ?? e.ticketUrl} rel="noopener" target="_blank">
+            <span>Submit your proposal</span><Icon name="arrow-right" size={16} />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── Sponsors ─────────── -->
+  <section class="p-strip">
+    <div class="u-container sponsors">
+      <h2 class="h-xl"><span class="u-accent">Our</span> <span class="u-aubergine">Sponsors</span></h2>
+      <div class="sponsors__marquee">
+        <ul class="sponsors__track">
+          {
+            Array.from({ length: 5 }).map((_, i) => (
+              <li class="sponsors__logo ph" aria-hidden={i >= 5 ? 'true' : undefined} />
+            ))
+          }
+          {/* Duplicate set for seamless loop — marquee translates -50%. */}
+          {
+            Array.from({ length: 5 }).map(() => (
+              <li class="sponsors__logo ph" aria-hidden="true" />
+            ))
+          }
+        </ul>
+      </div>
+      <a class="link-accent has-icon" href="#"><span>Become Sponsors</span><Icon name="arrow-right" size={16} /></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .u-container {
+    max-width: var(--u-maxw);
+    margin: 0 auto;
+    padding-inline: 1.5rem;
+  }
+  .u-accent { color: var(--u-orange); }
+  .u-aubergine { color: var(--u-aubergine); }
+  .u-white { color: #fff; }
+  :global(.i-accent) { color: var(--u-orange); }
+
+  .eyebrow {
+    color: var(--u-orange);
+    font-weight: 600;
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+  }
+  .h-xl {
+    font-size: clamp(2rem, 3.4vw, 3.125rem);
+    font-weight: 800;
+    color: var(--u-aubergine);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+  .body {
+    color: #111;
+    font-size: 1.125rem;
+    line-height: 1.55;
+    max-width: 34rem;
+  }
+  .ph {
+    background: var(--u-placeholder);
+    border-radius: 12px;
+  }
+  .ph--dark { background: rgba(255, 255, 255, 0.14); }
+
+  /* Buttons — Vanilla p-button, with icon alignment + exact sizing. */
+  .has-icon {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .hero__cta .p-button,
+  .hero__cta .p-button--positive {
+    padding: 0.7rem 1.4rem;
+    font-size: 1.05rem;
+    margin: 0;
+  }
+
+  /* Hero */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 3rem;
+  }
+  .hero__title {
+    font-size: clamp(2.4rem, 4.6vw, 3.125rem);
+    font-weight: 400;
+    line-height: 1.05;
+    margin: 0 0 0.75rem;
+  }
+  .hero__title .u-aubergine { font-weight: 800; }
+  .hero__title .u-accent { font-weight: 500; }
+  .hero__tagline {
+    font-size: 1.375rem;
+    font-weight: 600;
+    color: var(--u-aubergine);
+    margin-bottom: 0.75rem;
+  }
+  .hero__intro {
+    color: var(--u-aubergine);
+    font-size: 1.125rem;
+    max-width: 32rem;
+    margin-bottom: 1.5rem;
+  }
+  .hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    color: var(--u-aubergine);
+  }
+  .hero__meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .hero__art {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  /* Highlights */
+  .highlights {
+    display: grid;
+    grid-template-columns: 1fr 2.2fr;
+    gap: 2rem;
+    align-items: center;
+  }
+  .highlights__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  .card {
+    background: var(--u-placeholder);
+    border-radius: 14px;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: flex-end;
+    padding: 1rem;
+  }
+  .card__label {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Panels */
+  .panel {
+    border-radius: 24px;
+    padding: 3rem;
+  }
+  .panel--aubergine {
+    background: var(--u-aubergine);
+    color: #fff;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  /* .h-xl sets its own dark colour; on the dark panel force white
+     (outranks both .h-xl and .u-white). */
+  .panel--aubergine .h-xl { color: #fff; }
+  .stats {
+    list-style: none;
+    margin: 1.5rem 0;
+    padding: 0;
+    display: flex;
+    gap: 2.5rem;
+  }
+  .stats li { display: grid; gap: 0.15rem; }
+  .stats strong { font-size: 2rem; font-weight: 700; }
+  .stats span { opacity: 0.85; }
+  .panel__cta {
+    /* Vanilla p-button--base + is-dark theming provides the colour; keep
+       structure only. */
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+  }
+  .gallery__img {
+    width: 100%;
+    height: 100%;
+    min-height: 92px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  .gallery__img:last-child { grid-column: 1 / -1; }
+
+  /* CFP */
+  .panel--pink {
+    background: var(--u-pink);
+    display: grid;
+    grid-template-columns: auto 1.5fr 1fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  .cfp__mic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(circle, #fff 52%, transparent 53%),
+      repeating-radial-gradient(circle, rgba(233, 84, 32, 0.28) 0 1.5px, transparent 1.5px 16px);
+  }
+  .cfp__types {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+    color: var(--u-aubergine);
+    font-weight: 600;
+  }
+  .cfp__types li { display: flex; align-items: center; gap: 0.5rem; }
+  .cfp__open { color: var(--u-aubergine); margin-bottom: 1rem; }
+  .cfp__submit {
+    /* Vanilla p-button--positive provides the colour; keep sizing only. */
+    padding: 0.7rem 1.4rem;
+  }
+
+  /* Sponsors — continuous CSS marquee. Logos scroll left; track holds two
+     identical sets so the -50% translate loops seamlessly. Pauses on hover
+     and is disabled under prefers-reduced-motion. */
+  .sponsors__marquee {
+    overflow: hidden;
+    margin: 1.5rem 0;
+    /* fade the edges so logos enter/exit softly */
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  }
+  .sponsors__track {
+    display: flex;
+    gap: 1.5rem;
+    width: max-content;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    animation: sponsors-scroll 28s linear infinite;
+  }
+  .sponsors__track:hover { animation-play-state: paused; }
+  .sponsors__logo { height: 74px; flex: 0 0 auto; width: 160px; }
+  @keyframes sponsors-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sponsors__track { animation: none; flex-wrap: wrap; }
+    .sponsors__marquee { -webkit-mask-image: none; mask-image: none; }
+  }
+  .link-accent {
+    color: var(--u-orange);
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 1.125rem;
+  }
+  .link-accent:hover { text-decoration: underline; }
+
+  @media (max-width: 900px) {
+    .hero,
+    .highlights,
+    .panel--aubergine,
+    .panel--pink {
+      grid-template-columns: 1fr;
+    }
+    /* Figma mobile ref (node 2275:96): hero image sits BELOW the copy. */
+    .highlights__grid { grid-template-columns: repeat(3, 1fr); }
+    .stats { gap: 1.5rem; }
+    .panel { padding: 2rem; }
+    .cfp__mic { margin: 0 auto; }
+  }
+
+  /* Phones — match Figma "Home - Mobile": single-column, full-width cards,
+     stats stay 3-across, buttons stay Vanilla (just full width). */
+  @media (max-width: 600px) {
+    /* Vanilla p-strip ships ~3.5rem+ vertical padding — far more than the
+       Figma mobile sections (~pt-8/16, pb-40). Tighten to match. */
+    :global(.p-strip) { padding-top: 0.75rem; padding-bottom: 1.5rem; }
+    .u-container { padding-inline: 1rem; }
+    .hero { gap: 1.5rem; }
+    .hero__title { font-size: clamp(2rem, 9vw, 2.6rem); }
+    .hero__tagline { font-size: 1.15rem; }
+    .hero__meta { flex-direction: column; gap: 0.6rem; }
+    .hero__cta { flex-direction: column; align-items: stretch; }
+    .hero__cta .p-button,
+    .hero__cta .p-button--positive { justify-content: center; }
+    .highlights__grid { grid-template-columns: 1fr; }
+    .card { aspect-ratio: auto; min-height: 180px; }
+    .panel { border-radius: 20px; }
+
+    /* ── 2025 card — aggressive trim, polished typography ── */
+    .panel--aubergine {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+      padding: 1.1rem 1rem;
+      border-radius: 18px;
+    }
+    .panel--aubergine > div:first-child { display: contents; }
+    .panel--aubergine .eyebrow {
+      order: 1; margin: 0; text-transform: uppercase;
+      font-size: 0.75rem; /* 12px */
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      line-height: 1.3;
+    }
+    .panel--aubergine .h-xl {
+      order: 2; margin: -0.35rem 0 0;
+      font-size: 1.5rem; /* 24px */
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    .gallery { order: 3; grid-template-columns: 1fr; gap: 0; }
+    .gallery__img:not(:first-child) { display: none; }
+    .gallery__img:first-child {
+      min-height: 140px;
+      grid-column: auto;
+      border-radius: 12px;
+    }
+    .stats { order: 4; margin: 0; gap: 0.5rem; }
+    .stats li { flex: 1; justify-items: center; text-align: center; gap: 2px; }
+    .stats li :global(svg) { display: none; }
+    .stats strong { font-size: 1.3125rem; } /* 21px */
+    .stats span { font-size: 0.75rem; opacity: 0.9; } /* 12px */
+    .panel__cta {
+      order: 5;
+      width: 100%;
+      justify-content: center;
+      padding: 0.65rem 1.1rem;
+      font-size: 0.9rem; /* 14.4px */
+      font-weight: 600;
+    }
+    .panel__cta :global(svg) { display: none; }
+
+    /* ── Call for Speakers — two-row header, inline 32px mic, compact ── */
+    .panel--pink {
+      padding: 1.1rem 1rem;
+      border-radius: 18px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-areas:
+        "mic eyebrow"
+        "heading heading"
+        "body body"
+        "deadline deadline"
+        "submit submit";
+      gap: 0.4rem 0.6rem;
+      align-items: start;
+    }
+    /* Flatten the body + aside wrappers so their children become grid items. */
+    .cfp__body, .cfp__aside { display: contents; }
+    /* Inline 32px mic — strip the circle, align with eyebrow baseline. */
+    .cfp__mic {
+      grid-area: mic;
+      width: auto;
+      height: auto;
+      border-radius: 0;
+      background: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+    .cfp__mic :global(svg) {
+      width: 32px !important;
+      height: 32px !important;
+    }
+    .cfp .eyebrow {
+      grid-area: eyebrow;
+      text-transform: uppercase;
+      align-self: center;
+      font-size: 0.75rem; /* 12px */
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      line-height: 1.3;
+    }
+    .cfp .h-xl {
+      grid-area: heading;
+      margin: -0.2rem 0 0;
+      font-size: 1.5rem; /* 24px */
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    .cfp .body {
+      grid-area: body;
+      margin: 0;
+      font-size: 0.9375rem; /* 15px */
+      line-height: 1.5;
+      max-width: none;
+    }
+    .cfp__types { display: none; }
+    .cfp__open {
+      grid-area: deadline;
+      margin: 0.2rem 0 0;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+    .cfp__submit {
+      grid-area: submit;
+      width: 100%;
+      justify-content: center;
+      margin-top: 0.25rem;
+      padding: 0.65rem 1.1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+  }
+</style>
