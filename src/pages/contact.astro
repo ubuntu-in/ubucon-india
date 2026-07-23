@@ -16,7 +16,7 @@ const featured = editions.find((e) => e.data.endDate >= now) ?? editions.at(-1);
 const socialIcon: Record<string, string> = {
   x: 'twitter-x', mastodon: 'mastodon', linkedin: 'linkedin', github: 'github',
 };
-const formLive = Boolean(s?.formAccessKey);
+const formLive = Boolean(s?.formgridId);
 ---
 
 <Base title="Contact" description="Get in touch with the UbuCon India organising team.">
@@ -29,19 +29,13 @@ const formLive = Boolean(s?.formAccessKey);
       </p>
 
       <div class="contact-grid">
-        <!-- ── Message form (Web3Forms - static-host friendly) ── -->
         <div class="p-card contact-card">
           <h2 class="card-title">Send us a message</h2>
           <form
             class="contact-form"
-            action="https://api.web3forms.com/submit"
+            action={`https://formgrid.dev/api/f/${s?.formgridId}`}
             method="POST"
           >
-            <input type="hidden" name="access_key" value={s?.formAccessKey} />
-            <input type="hidden" name="subject" value="New message from ubuconindia.org" />
-            <input type="hidden" name="from_name" value="UbuCon India website" />
-            <!-- honeypot -->
-            <input type="checkbox" name="botcheck" class="u-off-screen" tabindex="-1" autocomplete="off" />
 
             <div class="field-row">
               <div class="field">
@@ -65,13 +59,22 @@ const formLive = Boolean(s?.formAccessKey);
               <p class="p-notification--caution form-note">
                 <span class="p-notification__content">
                   <span class="p-notification__message">
-                    The form isn't wired up yet - add a Web3Forms access key in
+                    The form isn't wired up yet - add a Formgrid form ID in
                     <code>src/content/site.yaml</code> to make it live. Meanwhile,
                     please email us directly.
                   </span>
                 </span>
               </p>
             )}
+              <script
+                src="https://js.hcaptcha.com/1/api.js"
+                async defer>
+              </script>
+              <div
+                class="h-captcha"
+                data-sitekey="4984ef7a-17c0-4828-a638-9b1e7158f138"
+                data-theme="dark">
+              </div>
             <button type="submit" class="p-button--positive" disabled={!formLive}>Send message</button>
           </form>
         </div>
@@ -93,7 +96,7 @@ const formLive = Boolean(s?.formAccessKey);
               <Icon name="geo-alt-fill" class="i-accent" size={22} />
               <span>
                 <span class="reach__label">Venue</span>
-                <span class="reach__venue">{featured.data.city} · {dateRange(featured.data.startDate, featured.data.endDate)}</span>
+                <span class="reach__venue">{featured.data.city} | {dateRange(featured.data.startDate, featured.data.endDate)}</span>
               </span>
             </p>
           )}

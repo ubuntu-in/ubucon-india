@@ -56,7 +56,7 @@ const speakers = defineCollection({
 const site = defineCollection({
   loader: file('src/content/site.yaml'),
   schema: z.object({
-    formAccessKey: z.string().default(''),
+    formgridId: z.string().default(''),
     contacts: z
       .array(z.object({ label: z.string(), email: z.string().email() }))
       .default([]),
