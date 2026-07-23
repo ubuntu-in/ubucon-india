@@ -77,9 +77,9 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
               ) : (
                 <button class="p-button--positive" type="button" disabled aria-disabled="true" title="Registration not open yet">Register now</button>
               )}
-              <a class="p-button" href={sub('sponsors')}>Become a sponsor</a>
+              <a class="p-button" href={sub('sponsors')}><Icon name="award-fill" size={16} /> Become a sponsor</a>
               {hasSchedule && (
-                <a class="p-button" href={sub('schedule')}>View schedule</a>
+                <a class="p-button--base" href={sub('schedule')}>View schedule</a>
               )}
             </>
           ) : (
