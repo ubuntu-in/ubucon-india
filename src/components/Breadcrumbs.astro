@@ -1,0 +1,25 @@
+---
+// Vanilla Framework breadcrumbs. Pass an ordered trail; the last item is the
+// current page (no href → rendered as plain text with aria-current).
+interface Crumb {
+  label: string;
+  href?: string;
+}
+const { items } = Astro.props as { items: Crumb[] };
+---
+
+<nav class="p-breadcrumbs" aria-label="Breadcrumb">
+  <ol class="p-breadcrumbs__items">
+    {
+      items.map((c, i) => (
+        <li class="p-breadcrumbs__item">
+          {c.href && i < items.length - 1 ? (
+            <a href={c.href}>{c.label}</a>
+          ) : (
+            <span aria-current="page">{c.label}</span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
