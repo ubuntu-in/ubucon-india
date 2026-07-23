@@ -20,8 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      # Auto-detects bun via bun.lock; builds and uploads the Pages artifact.
       - uses: withastro/action@v6
+        with:
+          package-manager: "bun@latest"
 
   deploy:
     needs: build
