@@ -1,10 +1,14 @@
-# UbuCon India 2026
+# UbuCon India
 
-Static site for UbuCon India 2026. Astro + Vanilla Framework (Canonical),
-Svelte islands for the few interactive bits. Deploys to GitHub Pages at
-`https://ubucon.org/india`.
+The official website for UbuCon India, the annual Ubuntu India Community
+Conference. Static site, one codebase, one entry per edition.
 
-## Develop
+Built with [Astro](https://astro.build) + [Vanilla
+Framework](https://vanillaframework.io) (Canonical's design system), with a few
+[Svelte](https://svelte.dev) islands for the interactive bits. Deploys to GitHub
+Pages at `https://ubucon.org/india`.
+
+## Quick start
 
 Package manager is **bun**.
 
@@ -15,22 +19,24 @@ bun run build     # production build to ./dist
 bun run preview   # preview the build
 ```
 
-## Editing event content
+Node >= 22.12.
 
-Event details are config, not templates — edit YAML under `src/content/`:
+## What's where
 
-- `event.yaml` — name, dates, venue, tagline, ticket URL (single source of truth).
-- `speakers/<slug>.yaml` — one file per speaker.
-- `schedule.yaml` — sessions (each `speaker:` references a speakers entry id).
-- `sponsors.yaml` — sponsors by tier.
+```
+src/
+  content/    Event data as YAML (the stuff you edit most). Validated by Zod.
+  pages/      Routes. index.astro is the home page; events/ holds per-edition pages.
+  components/ Reusable Astro + Svelte components (Nav, Footer, SpeakerGrid, ...).
+  layouts/    Base.astro wraps every page.
+  lib/        Helpers: url() (base-path links), dates, Indico fetch.
+  styles/     global.scss (brand tokens + Vanilla imports).
+public/img/   Images, referenced from YAML by path (e.g. /img/2025/talk.jpg).
+```
 
-Schemas live in `src/content.config.ts`; a bad or missing field fails the build.
+## Two ways to help
 
-Internal links/assets must go through `url()` in `src/lib/url.ts` so they carry
-the `/india` base path.
-
-## Deploy
-
-Pushing to `main` runs `.github/workflows/deploy.yml` (build + deploy to Pages).
-One-time: repo **Settings → Pages → Source = GitHub Actions**. No CNAME here —
-the `ubucon.org` custom domain lives in the org's separate Pages repo.
+- **Adding or updating event content** (a new edition, speakers, sponsors,
+  highlights, photos): you only touch YAML files. See **[CONTRIBUTIONS.md](CONTRIBUTIONS.md)**.
+- **Changing the website itself** (pages, components, styling, build, deploy):
+  see **[HACKING.md](HACKING.md)**.
