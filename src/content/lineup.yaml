@@ -7,17 +7,18 @@
   name: "Abdul Hakkeem P A"
   affiliation: "AI Researcher, Master's Student at Cochin University of Science and Technology"
   track: "Artificial Intelligence & Machine Learning (AI/ML)"
-  featured: true
-  photo: /img/2025/abdul-hakkeem.jpg
+  photo: ../assets/2025/speakers/abdul-hakkeem.jpg
 - id: "aditya-bhattacharya"
   edition: ["india-2025"]
   name: "Aditya Bhattacharya"
   affiliation: "Rajiv Gandhi Institute of Petroleum Technology"
   track: "Artificial Intelligence & Machine Learning (AI/ML)"
+  photo: ../assets/2025/speakers/aditya-bhattacharya.jpg
 - id: "aditya-d"
   edition: ["india-2025"]
   name: "Aditya D"
   track: "Artificial Intelligence & Machine Learning (AI/ML)"
+  photo: ../assets/2025/speakers/aditya-d.jpg
 - id: "aditya-minocha"
   edition: ["india-2025"]
   name: "Aditya Minocha"
@@ -27,10 +28,12 @@
   edition: ["india-2025"]
   name: "Archita Gorle"
   track: "Documentation, Community & Open Source"
+  photo: ../assets/2025/speakers/archita-gorle.png
 - id: "balachandran-sivakumar"
   edition: ["india-2025"]
   name: "Balachandran Sivakumar"
   track: "DevOps & Security"
+  photo: ../assets/2025/speakers/balachandran-sivakumar.jpg
 - id: "bhavanishankar-ravindra"
   edition: ["india-2025"]
   name: "Bhavanishankar Ravindra"
@@ -43,35 +46,44 @@
   edition: ["india-2025"]
   name: "Ganesh Patil"
   affiliation: "usebruno"
+  featured: true
   track: "Desktop"
+  photo: ../assets/2025/speakers/ganesh-patil.jpg
 - id: "guruprasad-lakshmi-narayanan"
   edition: ["india-2025"]
   name: "Guruprasad Lakshmi Narayanan"
   affiliation: "Canonical"
   track: "Cloud & Infrastructure"
+  featured: true
+  photo: ../assets/2025/speakers/guruprasad-ln.jpg
 - id: "ishani-ghoshal"
   edition: ["india-2025"]
   name: "Ishani Ghoshal"
   track: "Documentation, Community & Open Source"
+  photo: ../assets/2025/speakers/ishani-ghoshal.jpg
 - id: "kannan-mougalya"
   edition: ["india-2025"]
-  name: "Kannan Mougalya"
+  name: "Kannan Moudgalya"
   affiliation: "IIT Bombay"
   track: "Documentation, Community & Open Source"
+  photo: ../assets/2025/speakers/kannan-moudgulya.jpg
 - id: "karthik-m"
   edition: ["india-2025"]
   name: "Karthik M"
   track: "Embedded Systems & IoT"
+  photo: ../assets/2025/speakers/karthik-m.jpg
 - id: "keirthana-thangavelu-srinivasan"
   edition: ["india-2025"]
   name: "Keirthana Thangavelu Srinivasan"
   affiliation: "Canonical"
   track: "Documentation, Community & Open Source"
+  photo: ../assets/2025/speakers/keirthana-ts.png
 - id: "kunal-das"
   edition: ["india-2025"]
   name: "Kunal Das"
   affiliation: "CastAI"
   track: "DevOps & Security"
+  photo: ../assets/2025/speakers/kunal-das.jpg
 - id: "lk-reddy-ponnatota"
   edition: ["india-2025"]
   name: "LK Reddy Ponnatota"
@@ -80,11 +92,13 @@
   edition: ["india-2025"]
   name: "Manjunath Janardhan"
   track: "Artificial Intelligence & Machine Learning (AI/ML)"
+  photo: ../assets/2025/speakers/manjunath-janardhan.png
 - id: "n-nishchit"
   edition: ["india-2025"]
   name: "N Nishchit"
   affiliation: "BMS College of Enigneering"
   track: "Documentation, Community & Open Source"
+  photo: ../assets/2025/speakers/n-nischit.jpg
 - id: "neel-shah"
   edition: ["india-2025"]
   name: "Neel Shah"
@@ -94,6 +108,7 @@
   name: "Prarabdha Srivastava"
   affiliation: "IISc"
   track: "Artificial Intelligence & Machine Learning (AI/ML)"
+  photo: ../assets/2025/speakers/prarabdha-srivasthava.jpg
 - id: "ramprakash-singaravel"
   edition: ["india-2025"]
   name: "Ramprakash Singaravel"
@@ -108,20 +123,24 @@
   name: "Sameer Guruprasad"
   affiliation: "Visvesvaraya Technological University"
   track: "Artificial Intelligence & Machine Learning (AI/ML)"
+  photo: ../assets/2025/speakers/sameer-guruprasad.png
 - id: "samir-kamerkar"
   edition: ["india-2025"]
   name: "Samir Kamerkar"
   affiliation: "Canonical"
   track: "Desktop"
+  photo: ../assets/2025/speakers/samir-kamerkar.jpg
 - id: "saquib-akhtar"
   edition: ["india-2025"]
   name: "Saquib Akhtar"
   affiliation: "Linux SME & IDM L3 Lead @ NOKIA"
   track: "Cloud & Infrastructure"
+  photo: ../assets/2025/speakers/saquib-akhtar.jpeg
 - id: "saumili-dutta"
   edition: ["india-2025"]
   name: "Saumili Dutta"
   track: "Artificial Intelligence & Machine Learning (AI/ML)"
+  photo: ../assets/2025/speakers/saumili-dutta.jpg
 - id: "shanthi-priya"
   edition: ["india-2025"]
   name: "Shanthi Priya"
@@ -132,24 +151,29 @@
   name: "Shiv Bhushan Tripathi"
   affiliation: "Indian Institute of Technology Kanpur"
   track: "Cloud & Infrastructure"
+  photo: ../assets/2025/speakers/shiv-bhushan-tripathi.jpg
 - id: "siddhartha-pundit"
   edition: ["india-2025"]
   name: "Siddhartha Pundit"
   affiliation: "Visvesvaraya Technological University"
   track: "Artificial Intelligence & Machine Learning (AI/ML)"
+  photo: ../assets/2025/speakers/siddhartha-pundit.jpg
 - id: "soumyadeep-ghosh"
   edition: ["india-2025"]
   name: "Soumyadeep Ghosh"
-  affiliation: "Snapcrafters/Ubuntu/Ubuntu Membership Board/Ubuntu Flutter Community"
+  affiliation: "Canonical"
 - id: "soundarya-rangarajan"
   edition: ["india-2025"]
   name: "Soundarya Rangarajan"
   affiliation: "Canonical"
   track: "Cloud & Infrastructure"
+  photo: ../assets/2025/speakers/soundarya-rangarajan.jpg
 - id: "sourabh-banerjee"
   edition: ["india-2025"]
   name: "Sourabh Banerjee"
   affiliation: "Qualcomm"
+  featured: true
+  photo: ../assets/2025/speakers/sourabh-banerjee.jpg
 - id: "sujai-syrilraj"
   edition: ["india-2025"]
   name: "Sujai SyrilRaj"
@@ -159,24 +183,29 @@
   name: "Sumanto Kar"
   affiliation: "FOSSEE, IIT Bombay"
   track: "Artificial Intelligence & Machine Learning (AI/ML)"
+  photo: ../assets/2025/speakers/sumanto-kar.jpg
 - id: "tushar-gupta"
   edition: ["india-2025"]
   name: "Tushar Gupta"
   track: "DevOps & Security"
+  photo: ../assets/2025/speakers/tushar-gupta.jpeg
 - id: "utkarsh-maurya"
   edition: ["india-2025"]
   name: "Utkarsh Maurya"
   affiliation: "National Institute of Technology, Hamirpur, Himachal Pradesh, India"
   track: "Embedded Systems & IoT"
+  photo: ../assets/2025/speakers/utkarsh.jpeg
 - id: "varad-patil"
   edition: ["india-2025"]
   name: "Varad Patil"
   affiliation: "FOSSEE, IIT Bombay"
   track: "Embedded Systems & IoT"
+  photo: ../assets/2025/speakers/varad-patil.png
 - id: "venkatesh-chaturvedi"
   edition: ["india-2025"]
   name: "Venkatesh Chaturvedi"
   track: "Cloud & Infrastructure"
+  photo: ../assets/2025/speakers/venkatesh-chaturvedi.jpg
 - id: "vutukuri-sreenivas"
   edition: ["india-2025"]
   name: "Vutukuri Sreenivas"

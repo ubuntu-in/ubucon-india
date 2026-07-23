@@ -1,6 +1,6 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
-import { glob, file } from 'astro/loaders';
+import { file } from 'astro/loaders';
 
 const event = defineCollection({
   loader: file('src/content/event.yaml'),
@@ -34,25 +34,6 @@ const event = defineCollection({
   }),
 });
 
-const speakers = defineCollection({
-  loader: glob({ pattern: '**/*.yaml', base: './src/content/speakers' }),
-  schema: z.object({
-    edition: z.string(),
-    name: z.string(),
-    title: z.string().optional(),
-    org: z.string().optional(),
-    talk: z.string().optional(),
-    bio: z.string(),
-    photo: z.string().optional(),
-    socials: z
-      .object({ x: z.url(), mastodon: z.url(), github: z.url(), site: z.url() })
-      .partial()
-      .optional(),
-    featured: z.boolean().default(false),
-    category: z.string().optional(),
-  }),
-});
-
 const site = defineCollection({
   loader: file('src/content/site.yaml'),
   schema: z.object({
@@ -69,13 +50,13 @@ const site = defineCollection({
 
 const lineup = defineCollection({
   loader: file('src/content/lineup.yaml'),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     edition: z.array(z.string()).nonempty(),
     name: z.string(),
     affiliation: z.string().optional(),
     track: z.string().optional(),
     featured: z.boolean().default(false),
-    photo: z.string().optional(),
+    photo: image().optional(),
   }),
 });
 
@@ -90,4 +71,15 @@ const sponsors = defineCollection({
   }),
 });
 
-export const collections = { event, speakers, lineup, sponsors, site };
+const supporters = defineCollection({
+  loader: file('src/content/supporters.yaml'),
+  schema: ({ image }) => z.object({
+    edition: z.array(z.string()).nonempty(),
+    name: z.string(),
+    organisation: z.string().optional(),
+    designation: z.string().optional(),
+    photo: image().optional(),
+  }),
+});
+
+export const collections = { event, lineup, sponsors, site, supporters };

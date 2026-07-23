@@ -1,11 +1,7 @@
 <script>
-  // Client-side speaker filtering (chips) + pagination. The only interactive
-  // island on the site - filtering a grid genuinely needs JS. Ships as a static
-  // bundle, so it works fine on GitHub Pages.
-  let { speakers = [], pageSize = 9 } = $props();
+  let { speakers = [], pageSize = 12 } = $props();
 
-  // Filter chips: "All" plus each distinct category present, in first-seen order.
-  const categories = ['All', ...Array.from(new Set(speakers.map((s) => s.category).filter(Boolean)))];
+  const categories = $derived(['All', ...Array.from(new Set(speakers.map((s) => s.category).filter(Boolean)))]);
 
   let active = $state('All');
   let page = $state(1);
@@ -21,7 +17,6 @@
     page = 1;
   }
 
-  // Fallback avatar when a speaker has no photo (most of the line-up).
   const initials = (name) =>
     name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
 </script>
@@ -81,7 +76,6 @@
 {/if}
 
 <style>
-  /* Filter chips - square Vanilla-style, dark active. */
   .filters { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 0 0 2rem; }
   .chip {
     border: 0;
@@ -107,7 +101,6 @@
   }
   .grid > li { display: flex; }
 
-  /* Vanilla p-card, brand-squared, with a full-bleed media header. */
   .speaker {
     display: flex;
     flex-direction: column;
