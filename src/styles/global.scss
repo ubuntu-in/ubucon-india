@@ -1,4 +1,4 @@
-// UbuCon India 2026 — global stylesheet.
+// UbuCon India 2026 - global stylesheet.
 // Strict Vanilla Framework (Canonical). No custom design system.
 // ponytail: full framework include; prune to used patterns if CSS weight matters.
 @import 'vanilla-framework';
@@ -8,10 +8,83 @@
 :root {
   --u-orange: #e95420; // Ubuntu orange (exact, from Figma)
   --u-orange-dark: #c7431a;
-  --u-aubergine: #2c001e; // Ubuntu aubergine — headings, panels, footer
+  --u-aubergine: #2c001e; // Ubuntu aubergine - headings, panels, footer
   --u-mute: #56334b; // muted aubergine (logo "2026", secondary)
   --u-green: #0e8420; // Vanilla positive green (Register CTA)
   --u-pink: #fceee9; // Call-for-speakers panel tint
   --u-placeholder: #d9d9d9; // grey image placeholders (matches Figma)
   --u-maxw: 1232px; // Figma nav/content max width
+}
+
+// Shared brand helpers. index.astro/about.astro keep local copies (pre-dating
+// this); the events pages rely on these globals so they don't each redefine.
+.u-container {
+  max-width: var(--u-maxw);
+  margin: 0 auto;
+  padding-inline: 1.5rem;
+}
+.u-accent { color: var(--u-orange); }
+.u-aubergine { color: var(--u-aubergine); }
+.i-accent { color: var(--u-orange); }
+.eyebrow {
+  color: var(--u-orange);
+  font-weight: 600;
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+.h-xl {
+  font-size: clamp(2rem, 3.4vw, 3.125rem);
+  font-weight: 800;
+  color: var(--u-aubergine);
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+.h-md {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--u-aubergine);
+  margin: 1.75rem 0 0.75rem;
+}
+.body {
+  color: #111;
+  font-size: 1.125rem;
+  line-height: 1.55;
+  max-width: 34rem;
+}
+.has-icon {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.5rem;
+}
+// Square chips - Vanilla ships a 1rem pill; brand uses square corners (like buttons).
+.p-chip { border-radius: 0; }
+
+// Notifications - match the Figma 1:1: tinted fill per type + a 4px coloured
+// left bar, no status icon and no outer border. Stock Vanilla is white-bg with
+// a status glyph (tick / info / …) and a grey border; we drop both and tint.
+.p-notification,
+.p-notification--positive,
+.p-notification--information,
+.p-notification--caution,
+.p-notification--negative {
+  background-image: none; // remove the status tick/info glyph
+  border: none;           // drop the grey outer border (the ::before bar stays)
+  border-radius: 0;
+  padding-left: 1.25rem;  // reclaim the icon gutter
+}
+.p-notification::before,
+.p-notification--positive::before,
+.p-notification--information::before,
+.p-notification--caution::before,
+.p-notification--negative::before {
+  width: 4px;
+  left: 0;
+}
+.p-notification--positive { background-color: #f0f9f0; }
+.p-notification,
+.p-notification--information { background-color: #f0f6fc; }
+.p-notification--caution { background-color: #fff6ec; }
+.p-notification--negative { background-color: #fdeeed; }
+@media (max-width: 600px) {
+  .u-container { padding-inline: 1rem; }
 }
