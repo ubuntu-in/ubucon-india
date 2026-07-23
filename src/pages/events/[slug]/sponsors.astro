@@ -1,0 +1,194 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { url } from '../../../lib/url';
+
+export async function getStaticPaths() {
+  const editions = await getCollection('event');
+  return editions.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const e = entry.data;
+const slug = entry.id;
+const now = new Date();
+const past = e.endDate < now;
+
+const upcoming =
+  (await getCollection('event'))
+    .sort((a, b) => a.data.startDate.getTime() - b.data.startDate.getTime())
+    .find((ev) => ev.data.endDate >= now) ?? null;
+
+
+const TIER_META = {
+  diamond: { label: 'Diamond', sub: 'Lead partners', size: 'lg' },
+  platinum: { label: 'Platinum', sub: 'Presenting partners', size: 'lg' },
+  gold: { label: 'Gold', sub: 'Headline sponsors', size: 'md' },
+  silver: { label: 'Silver', sub: 'Supporting sponsors', size: 'sm' },
+  bronze: { label: 'Bronze', sub: 'Supporting sponsors', size: 'sm' },
+  supporter: { label: 'Supporters', sub: 'Friends of UbuCon', size: 'xs' },
+  community: { label: 'Community', sub: 'Partners & media', size: 'xs' },
+} as const;
+const ORDER = Object.keys(TIER_META) as (keyof typeof TIER_META)[];
+
+const sponsors = await getCollection('sponsors', ({ data }) => data.editions.includes(slug));
+const groups = ORDER
+  .map((tier) => ({ tier, items: sponsors.filter((s) => s.data.tier === tier) }))
+  .filter((g) => g.items.length > 0);
+
+const crumbs = [
+  { label: 'Events', href: url('/events') },
+  { label: e.name, href: url(`/events/${slug}`) },
+  { label: 'Sponsors' },
+];
+---
+
+<Base title={`Sponsors · ${e.name}`} description={`Sponsors of ${e.name}.`}>
+  <section class="p-strip">
+    <div class="u-container">
+      <Breadcrumbs items={crumbs} />
+      <h1 class="h-xl u-aubergine">Sponsors</h1>
+      <p class="body sponsors-lede">
+        {e.name} is powered by organisations that believe in open source. Thank you to
+        the sponsors making it happen.
+      </p>
+
+      {!past && (
+        <div class="p-notification--information is-inline sponsors-banner">
+          <div class="p-notification__content">
+            <span class="p-notification__title">Sponsorship spots are limited.</span>&nbsp;
+            <p class="p-notification__message">Secure your tier early.</p>
+          </div>
+        </div>
+      )}
+
+      {groups.length === 0 ? (
+        <p class="body empty">
+          Sponsors will be announced soon. Interested in supporting UbuCon India?
+          <a href={url('/contact')}>Get in touch.</a>
+        </p>
+      ) : (
+        <div class="tiers">
+          {groups.map((g) => (
+            <div class="tier">
+              <div class="tier__head">
+                <span class="tier__bar" aria-hidden="true"></span>
+                <h2 class="tier__name">{TIER_META[g.tier].label}</h2>
+                <span class="tier__sub">{TIER_META[g.tier].sub}</span>
+              </div>
+              <div class:list={['p-logo-section', 'tier__logos', `logos--${TIER_META[g.tier].size}`]}>
+                <div class="p-logo-section__items">
+                  {g.items.map(({ data: s }) => (
+                    <div class="p-logo-section__item">
+                      <a href={s.url} rel="noopener" target="_blank" aria-label={s.name}>
+                        {s.logo ? (
+                          <img class="p-logo-section__logo" src={url(s.logo)} alt={s.name} loading="lazy" />
+                        ) : (
+                          <span class="logo__name">{s.name}</span>
+                        )}
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {upcoming ? (
+        /* Become a sponsor CTA - always sells the latest (upcoming) event. */
+        <div class="sponsor-cta">
+          <div class="sponsor-cta__text">
+            <h2 class="sponsor-cta__title">Want to sponsor {upcoming.data.name}?</h2>
+            <p>Reach a passionate open-source audience. Grab a tier and support the community.</p>
+          </div>
+          <div class="sponsor-cta__actions">
+            <a class="p-button--positive" href={url('/contact')}>Become a sponsor</a>
+            {upcoming.data.prospectusUrl && (
+              <a class="p-button" href={upcoming.data.prospectusUrl} rel="noopener" target="_blank">Download prospectus</a>
+            )}
+          </div>
+        </div>
+      ) : (
+        /* No upcoming edition to sponsor - invite a community donation instead. */
+        <div class="sponsor-cta">
+          <div class="sponsor-cta__text">
+            <h2 class="sponsor-cta__title">Support the community</h2>
+            <p>No edition is on the calendar yet. UbuCon India runs on volunteers - a
+              donation keeps the community going between events.</p>
+          </div>
+          <div class="sponsor-cta__actions">
+            <a class="p-button--positive" href={url('/contact')}>Donate to the community</a>
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .sponsors-lede { max-width: 42rem; }
+  .sponsors-banner { margin: 1.5rem 0; }
+  .empty { margin-top: 1.5rem; }
+  .empty a { color: var(--u-orange); font-weight: 600; }
+
+  .tiers { display: grid; gap: 2.5rem; margin-top: 2rem; }
+  .tier__head { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .tier__bar { width: 6px; height: 24px; background: var(--u-orange); flex: none; }
+  .tier__name { font-size: 1.375rem; font-weight: 700; color: var(--u-aubergine); margin: 0; }
+  .tier__sub {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #666;
+  }
+
+  /* Logos have wildly different aspect ratios (Qualcomm ~5:1 vs CDAC ~1.4:1),
+     so height-only normalising blows the wide ones up. Instead give every logo
+     an equal bounding BOX per tier and contain-fit inside it - equal visual
+     footprint, aspect preserved. No card background (strict vanilla). */
+  .tier__logos { --box-w: 200px; --box-h: 76px; }
+  .logos--md { --box-w: 170px; --box-h: 64px; }
+  .logos--sm { --box-w: 150px; --box-h: 54px; }
+  .logos--xs { --box-w: 120px; --box-h: 44px; }
+  .tier__logos :global(.p-logo-section__items) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2.5rem;
+  }
+  .tier__logos :global(.p-logo-section__item) { margin: 0; }
+  .tier__logos a { display: block; text-decoration: none; }
+  .tier__logos :global(.p-logo-section__logo) {
+    width: var(--box-w);
+    height: var(--box-h);
+    max-width: 100%;
+    object-fit: contain;
+    object-position: left center;
+  }
+  .logo__name { font-weight: 500; color: #555; }
+
+  .sponsor-cta {
+    margin-top: 3rem;
+    background: var(--u-pink);
+    padding: 2rem 3rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .sponsor-cta__title { font-size: 1.625rem; font-weight: 700; color: var(--u-aubergine); margin: 0 0 0.5rem; }
+  .sponsor-cta__text p { color: #666; margin: 0; max-width: 48ch; }
+  .sponsor-cta__actions { display: flex; flex-direction: column; gap: 0.6rem; }
+  .sponsor-cta__actions .p-button--positive,
+  .sponsor-cta__actions .p-button { margin: 0; text-align: center; }
+
+  @media (max-width: 620px) {
+    .sponsor-cta { padding: 1.5rem; }
+    .sponsor-cta__actions { width: 100%; }
+  }
+</style>

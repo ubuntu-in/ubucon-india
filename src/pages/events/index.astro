@@ -1,0 +1,133 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Pagination from '../../components/Pagination.astro';
+import { url } from '../../lib/url';
+import { dateRange } from '../../lib/dates';
+
+// All editions, newest first.
+const editions = (await getCollection('event')).sort(
+  (a, b) => b.data.startDate.getTime() - a.data.startDate.getTime(),
+);
+const now = new Date();
+// Positive banner announces the soonest upcoming edition that has ticketing.
+const upcoming = [...editions]
+  .reverse()
+  .find((e) => e.data.endDate >= now && e.data.ticketUrl);
+
+// ponytail: single page until there are many editions; Pagination hides itself
+// when total === 1, so this stays inert with today's 2 entries.
+const PAGE_SIZE = 8;
+const totalPages = Math.max(1, Math.ceil(editions.length / PAGE_SIZE));
+---
+
+<Base title="Events" description="All editions of UbuCon India - past, present and upcoming.">
+  <section class="p-strip">
+    <div class="u-container">
+      <h1 class="h-xl u-aubergine">Events</h1>
+      <p class="body events-lede">Explore every edition of UbuCon India - the annual Ubuntu India Community Conference.</p>
+
+      {upcoming && (
+        <div class="p-notification--positive is-inline events-banner">
+          <div class="p-notification__content">
+            <span class="p-notification__title">Registrations are open.</span>
+            <p class="p-notification__message">Join {upcoming.data.name} on {dateRange(upcoming.data.startDate, upcoming.data.endDate)} in {upcoming.data.city.replace(/,.*$/, '')}.</p>
+          </div>
+        </div>
+      )}
+
+      {editions.length === 0 ? (
+        <p class="body empty">No events yet. Check back soon.</p>
+      ) : (
+        <ul class="editions">
+          {editions.map(({ id, data: e }) => {
+            const past = e.endDate < now;
+            return (
+              <li>
+                <a class="edition" href={url(`/events/${id}`)}>
+                  <span class="edition__media">
+                    {e.cover && <img class="edition__img" src={url(e.cover)} alt="" loading="lazy" />}
+                    <span class="edition__year">{e.edition}</span>
+                  </span>
+                  <span class="edition__body">
+                    <span class:list={['p-chip', { 'p-chip--positive': !past }]}><span class="p-chip__value">{past ? 'Past edition' : 'Upcoming'}</span></span>
+                    <span class="edition__name">{e.name}</span>
+                    <span class="edition__meta">{dateRange(e.startDate, e.endDate)}  ·  {e.city}</span>
+                    <span class="edition__desc">{e.intro}</span>
+                    <span class="edition__go has-icon">{past ? 'View recap' : 'View event'} <Icon name="chevron-right" size={14} /></span>
+                  </span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      <Pagination current={1} total={totalPages} hrefFor={() => url('/events')} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .events-lede { max-width: 42rem; }
+  .empty { margin-top: 1.5rem; }
+  .events-banner { margin: 1.5rem 0; }
+
+  .editions { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; gap: 1.5rem; }
+
+  .edition {
+    display: flex;
+    min-height: 240px;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    overflow: hidden;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .edition:hover { border-color: var(--u-orange); box-shadow: 0 6px 20px rgba(44, 0, 30, 0.1); }
+
+  .edition__media {
+    position: relative;
+    flex: 0 0 420px;
+    display: grid;
+    place-items: center;
+    background: #d4d4d4;
+    overflow: hidden;
+  }
+  .edition__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .edition__year {
+    position: relative;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  }
+
+  .edition__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 2.25rem 2.5rem;
+    flex: 1;
+    min-width: 0;
+  }
+  .edition__body .p-chip { align-self: flex-start; margin: 0; }
+  .edition__name { font-size: 1.875rem; font-weight: 700; color: var(--u-aubergine); }
+  .edition__meta { color: var(--u-orange); font-weight: 500; }
+  .edition__desc { color: #595959; max-width: 60ch; }
+  .edition__go { color: #06c; font-weight: 600; }
+
+  .p-pagination { margin-top: 2rem; justify-content: center; }
+
+  @media (max-width: 760px) {
+    .edition { flex-direction: column; }
+    .edition__media { flex: 0 0 160px; width: 100%; }
+    .edition__year { font-size: 2.75rem; }
+    .edition__body { padding: 1.5rem; }
+    .edition__name { font-size: 1.5rem; }
+  }
+</style>
