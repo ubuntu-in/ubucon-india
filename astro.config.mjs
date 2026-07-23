@@ -16,8 +16,9 @@ export default defineConfig({
         // silence the Dart Sass @import deprecation noise until Vanilla ships @use.
         scss: {
           loadPaths: ['node_modules'],
-          // Vanilla 4 still uses @import + global sass functions; noise, not our bug.
-          silenceDeprecations: ['import', 'global-builtin'],
+          // Vanilla 4 still uses @import, global sass functions and the legacy
+          // if() syntax; all noise from the framework, not our bug.
+          silenceDeprecations: ['import', 'global-builtin', 'if-function'],
         },
       },
     },

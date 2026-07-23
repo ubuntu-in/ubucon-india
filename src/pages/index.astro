@@ -1,16 +1,37 @@
 ---
-import { getEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import { url } from '../lib/url';
 import heroArt from '../assets/hero-bengaluru.png';
 
-const event = await getEntry('event', 'india-2026');
-const e = event!.data;
+// Feature the nearest upcoming edition (fallback: latest overall).
+const now = new Date();
+const editions = (await getCollection('event')).sort(
+  (a, b) => a.data.startDate.getTime() - b.data.startDate.getTime(),
+);
+const event = editions.find((ev) => ev.data.endDate >= now) ?? editions[editions.length - 1];
+const e = event.data;
 
-const lookback = await getEntry('lookback', 'india-2025');
-const lb = lookback!.data;
+// Look-back: latest past edition (its own event entry is the single source).
+// Shown only if that edition has look-back content (stats or gallery).
+const pastEditions = editions.filter((x) => x.data.endDate < now);
+const lbEntry = pastEditions.at(-1) ?? null;
+const lb = lbEntry?.data ?? null;
+const showLookback = lb && (lb.stats.length > 0 || lb.gallery.length > 0);
+
+// Highlights: featured edition's if set, else fall back to latest past edition's
+// (so the cards show real last-year content until this year's are filled in).
+const highlights = e.highlights.length > 0 ? e.highlights : (lb?.highlights ?? []);
+
+// Sponsors from the collection. Marquee thresholds differ by viewport (SSG, so
+// we tag a tier here and let CSS switch): phone marquees at >3 (logos wrap ugly
+// sooner on narrow screens), desktop stays a static row until 6+.
+const sponsors = await getCollection('sponsors');
+const n = sponsors.length;
+const useMarquee = n > 3; // phone threshold - needs the duplicated loop DOM
+const marqueeAll = n >= 6; // wide enough to marquee on desktop too
 
 const day = (d: Date) => d.getUTCDate();
 const monthYear = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(e.endDate);
@@ -19,11 +40,11 @@ const cfpDeadline = e.cfpDeadline
   ? new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(e.cfpDeadline)
   : null;
 
-const highlights = ['Inspiring Talks', 'Hands-on Workshops', 'Community connect'];
 const cfpTypes = [
   { icon: 'chat-left-text-fill', label: 'Talks' },
   { icon: 'people-fill', label: 'Workshops' },
   { icon: 'lightning-charge-fill', label: 'Lightning Talks' },
+  { icon: 'chat-dots-fill', label: 'BoFs' },
 ];
 ---
 
@@ -42,10 +63,10 @@ const cfpTypes = [
         </div>
         <div class="hero__cta">
           <a class="p-button--positive has-icon" href={e.ticketUrl} rel="noopener" target="_blank">
-            <span>Register Now</span><Icon name="arrow-up-right" size={16} />
+            <span>Register Now</span><Icon name="box-arrow-up-right" size={16} />
           </a>
           <a class="p-button has-icon" href={url('/about')}>
-            <span>Learn More</span><Icon name="arrow-right" size={16} />
+            <span>Learn More</span><Icon name="chevron-right" size={16} />
           </a>
         </div>
       </div>
@@ -54,35 +75,51 @@ const cfpTypes = [
   </section>
 
   <!-- ─────────── Conference Highlights ─────────── -->
+  {highlights.length > 0 && (
   <section class="p-strip">
     <div class="u-container highlights">
       <h2 class="h-xl highlights__title"><span class="u-aubergine">Conference</span> <span class="u-accent">Highlights</span></h2>
       <div class="highlights__grid">
-        {highlights.map((h) => (
-          <div class="card"><span class="card__label">{h}</span></div>
-        ))}
+        {highlights.map((h) => {
+          const Tag = h.url ? 'a' : 'div';
+          return (
+            <Tag
+              class:list={['card', { 'card--link': h.url }]}
+              href={h.url}
+              rel={h.url ? 'noopener' : undefined}
+              target={h.url ? '_blank' : undefined}
+            >
+              <span class="card__media">
+                {h.image && <img class="card__img" src={url(h.image)} alt="" loading="lazy" />}
+                {h.url && <span class="card__play" aria-hidden="true"><Icon name="play-circle-fill" size={44} /></span>}
+              </span>
+              <span class="card__label">{h.label}{h.url && <span class="u-off-screen"> - watch the talk</span>}</span>
+            </Tag>
+          );
+        })}
       </div>
     </div>
   </section>
+  )}
 
-  <!-- ─────────── Last year 2025 ─────────── -->
+  <!-- ─────────── Last year look-back (newest past edition) ─────────── -->
+  {showLookback && (
   <section class="p-strip">
     <div class="u-container">
       <div class="panel panel--aubergine">
         <div>
-          <p class="eyebrow">{lb.eyebrow}</p>
-          <h2 class="h-xl u-white">{lb.heading}</h2>
+          <p class="eyebrow">Last year at {lb.name}</p>
+          <h2 class="h-xl u-white">A look back at an unforgettable journey.</h2>
           <ul class="stats">
             {lb.stats.map((s) => (
               <li>
-                <Icon name="people-fill" class="i-accent" size={30} />
                 <strong>{s.n}</strong>
                 <span>{s.label}</span>
               </li>
             ))}
           </ul>
-          <a class="p-button has-icon panel__cta" href={lb.highlightsUrl ?? '#'}>
-            <span>View {lb.edition} Highlights</span><Icon name="arrow-right" size={16} />
+          <a class="p-button has-icon panel__cta" href={url(`/events/${lbEntry.id}`)}>
+            <span>View {lb.edition} Highlights</span><Icon name="chevron-right" size={16} />
           </a>
         </div>
         <div class="gallery">
@@ -93,6 +130,7 @@ const cfpTypes = [
       </div>
     </div>
   </section>
+  )}
 
   <!-- ─────────── Call for speakers ─────────── -->
   <section class="p-strip">
@@ -101,7 +139,7 @@ const cfpTypes = [
         <div class="cfp__mic" aria-hidden="true"><Icon name="mic-fill" class="i-accent" size={44} /></div>
         <div class="cfp__body">
           <p class="eyebrow">Call for Speakers</p>
-          <h2 class="h-xl">Share your voice.<br />Inspire thousands.</h2>
+          <h2 class="h-xl">Share your voice.&nbsp;<br />Inspire thousands.</h2>
           <p class="body">We are looking for passionate speakers to share their ideas, stories and expertise with the open source community.</p>
         </div>
         <div class="cfp__aside">
@@ -110,9 +148,9 @@ const cfpTypes = [
               <li><Icon name={t.icon} class="i-accent" size={18} /> {t.label}</li>
             ))}
           </ul>
-          {cfpDeadline && <p class="cfp__open"><strong>CFP is open now!</strong><br />Deadline: {cfpDeadline}</p>}
+          {cfpDeadline && <p class="cfp__open"><strong>CFP is open now!</strong>&nbsp;<br />Deadline: {cfpDeadline}</p>}
           <a class="p-button--positive has-icon cfp__submit" href={e.cfpUrl ?? e.ticketUrl} rel="noopener" target="_blank">
-            <span>Submit your proposal</span><Icon name="arrow-right" size={16} />
+            <span>Submit your proposal</span><Icon name="chevron-right" size={16} />
           </a>
         </div>
       </div>
@@ -123,22 +161,33 @@ const cfpTypes = [
   <section class="p-strip">
     <div class="u-container sponsors">
       <h2 class="h-xl"><span class="u-accent">Our</span> <span class="u-aubergine">Sponsors</span></h2>
-      <div class="sponsors__marquee">
-        <ul class="sponsors__track">
-          {
-            Array.from({ length: 5 }).map((_, i) => (
-              <li class="sponsors__logo ph" aria-hidden={i >= 5 ? 'true' : undefined} />
-            ))
-          }
-          {/* Duplicate set for seamless loop — marquee translates -50%. */}
-          {
-            Array.from({ length: 5 }).map(() => (
-              <li class="sponsors__logo ph" aria-hidden="true" />
-            ))
-          }
+      {sponsors.length > 0 && (useMarquee ? (
+        <div class:list={['sponsors__marquee', marqueeAll ? 'sponsors__marquee--always' : 'sponsors__marquee--phone']}>
+          {/* Render twice so the -50% translate loops seamlessly; 2nd set (is-dup) hidden from a11y and dropped when shown as a static row. */}
+          <ul class="sponsors__track">
+            {[...sponsors, ...sponsors].map(({ data: s }, i) => (
+              <li class:list={{ 'is-dup': i >= n }} aria-hidden={i >= n ? 'true' : undefined}>
+                <a href={s.url} rel="noopener" target="_blank" aria-label={s.name} tabindex={i >= n ? -1 : undefined}>
+                  {s.logo ? <img src={url(s.logo)} alt={s.name} loading="lazy" /> : <span>{s.name}</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <ul class="sponsors__row">
+          {sponsors.map(({ data: s }) => (
+            <li>
+              <a href={s.url} rel="noopener" target="_blank" aria-label={s.name}>
+                {s.logo
+                  ? <img src={url(s.logo)} alt={s.name} loading="lazy" />
+                  : <span>{s.name}</span>}
+              </a>
+            </li>
+          ))}
         </ul>
-      </div>
-      <a class="link-accent has-icon" href="#"><span>Become Sponsors</span><Icon name="arrow-right" size={16} /></a>
+      ))}
+      <a class="link-accent has-icon" href={url(`/events/${event.id}/sponsors`)}><span>Become Sponsors</span><Icon name="chevron-right" size={16} /></a>
     </div>
   </section>
 </Base>
@@ -173,13 +222,7 @@ const cfpTypes = [
     line-height: 1.55;
     max-width: 34rem;
   }
-  .ph {
-    background: var(--u-placeholder);
-    border-radius: 12px;
-  }
-  .ph--dark { background: rgba(255, 255, 255, 0.14); }
-
-  /* Buttons — Vanilla p-button, with icon alignment + exact sizing. */
+  /* Buttons - Vanilla p-button, with icon alignment + exact sizing. */
   .has-icon {
     display: inline-flex !important;
     align-items: center;
@@ -255,20 +298,49 @@ const cfpTypes = [
     grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
   }
+  /* Image on top, label as text below (matches the /events Overview cards). */
   .card {
-    background: var(--u-placeholder);
-    border-radius: 14px;
-    aspect-ratio: 1;
     display: flex;
-    align-items: flex-end;
-    padding: 1rem;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+    overflow: hidden;
+    transition: border-color 0.15s ease;
+  }
+  .card__media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: var(--u-placeholder);
+  }
+  .card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s ease;
   }
   .card__label {
-    color: #fff;
-    font-weight: 700;
-    font-size: 1.05rem;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    padding: 1rem 1.1rem;
+    font-weight: 600;
+    color: var(--u-aubergine);
   }
+  /* Video-linked highlight cards: clickable, with a centred play badge. */
+  .card--link { text-decoration: none; cursor: pointer; }
+  .card--link:hover { border-color: var(--u-orange); }
+  .card__play {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    opacity: 0.9;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.55));
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  .card--link:hover .card__play,
+  .card--link:focus-visible .card__play { transform: scale(1.1); opacity: 1; }
+  .card--link:hover .card__img { transform: scale(1.04); }
 
   /* Panels */
   .panel {
@@ -296,10 +368,6 @@ const cfpTypes = [
   .stats li { display: grid; gap: 0.15rem; }
   .stats strong { font-size: 2rem; font-weight: 700; }
   .stats span { opacity: 0.85; }
-  .panel__cta {
-    /* Vanilla p-button--base + is-dark theming provides the colour; keep
-       structure only. */
-  }
   .gallery {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -348,19 +416,41 @@ const cfpTypes = [
     padding: 0.7rem 1.4rem;
   }
 
-  /* Sponsors — continuous CSS marquee. Logos scroll left; track holds two
-     identical sets so the -50% translate loops seamlessly. Pauses on hover
-     and is disabled under prefers-reduced-motion. */
+  /* Sponsors - static centered row for few logos. */
+  .sponsors__row {
+    list-style: none;
+    margin: 1.5rem 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem 3rem;
+  }
+  .sponsors__row a,
+  .sponsors__track a { display: inline-flex; align-items: center; }
+  .sponsors__row img,
+  .sponsors__track img {
+    height: 56px;
+    width: auto;
+    max-width: 190px;
+    object-fit: contain;
+  }
+  .sponsors__row span,
+  .sponsors__track span { font-size: 1.25rem; font-weight: 700; color: var(--u-aubergine); }
+
+  /* Marquee (>=6 logos) - continuous scroll, two identical sets loop via -50%.
+     Pauses on hover; disabled under reduced-motion (falls back to a wrap row). */
   .sponsors__marquee {
     overflow: hidden;
     margin: 1.5rem 0;
-    /* fade the edges so logos enter/exit softly */
     -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
     mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
   }
   .sponsors__track {
     display: flex;
-    gap: 1.5rem;
+    align-items: center;
+    gap: 3rem;
     width: max-content;
     list-style: none;
     margin: 0;
@@ -368,14 +458,21 @@ const cfpTypes = [
     animation: sponsors-scroll 28s linear infinite;
   }
   .sponsors__track:hover { animation-play-state: paused; }
-  .sponsors__logo { height: 74px; flex: 0 0 auto; width: 160px; }
   @keyframes sponsors-scroll {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
   }
+  /* Static-row fallback shared by: reduced-motion, and desktop when the count
+     only crosses the phone threshold (--phone, 4–5 logos). */
   @media (prefers-reduced-motion: reduce) {
-    .sponsors__track { animation: none; flex-wrap: wrap; }
+    .sponsors__track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; }
+    .sponsors__track .is-dup { display: none; }
     .sponsors__marquee { -webkit-mask-image: none; mask-image: none; }
+  }
+  @media (min-width: 601px) {
+    .sponsors__marquee--phone { overflow: visible; -webkit-mask-image: none; mask-image: none; }
+    .sponsors__marquee--phone .sponsors__track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; }
+    .sponsors__marquee--phone .sponsors__track .is-dup { display: none; }
   }
   .link-accent {
     color: var(--u-orange);
@@ -399,25 +496,30 @@ const cfpTypes = [
     .cfp__mic { margin: 0 auto; }
   }
 
-  /* Phones — match Figma "Home - Mobile": single-column, full-width cards,
+  /* Phones - match Figma "Home - Mobile": single-column, full-width cards,
      stats stay 3-across, buttons stay Vanilla (just full width). */
   @media (max-width: 600px) {
-    /* Vanilla p-strip ships ~3.5rem+ vertical padding — far more than the
+    /* Vanilla p-strip ships ~3.5rem+ vertical padding - far more than the
        Figma mobile sections (~pt-8/16, pb-40). Tighten to match. */
     :global(.p-strip) { padding-top: 0.75rem; padding-bottom: 1.5rem; }
     .u-container { padding-inline: 1rem; }
     .hero { gap: 1.5rem; }
+    .hero__art { display: none; } /* phones: drop the illustration, tighter above-fold */
     .hero__title { font-size: clamp(2rem, 9vw, 2.6rem); }
     .hero__tagline { font-size: 1.15rem; }
     .hero__meta { flex-direction: column; gap: 0.6rem; }
     .hero__cta { flex-direction: column; align-items: stretch; }
     .hero__cta .p-button,
     .hero__cta .p-button--positive { justify-content: center; }
+    /* Sponsors - tighter logos/gaps on phones. */
+    .sponsors__row { gap: 1.5rem 2rem; margin: 1.25rem 0; }
+    .sponsors__row img,
+    .sponsors__track img { height: 44px; max-width: 150px; }
+    .sponsors__track { gap: 2rem; }
     .highlights__grid { grid-template-columns: 1fr; }
-    .card { aspect-ratio: auto; min-height: 180px; }
     .panel { border-radius: 20px; }
 
-    /* ── 2025 card — aggressive trim, polished typography ── */
+    /* ── 2025 card - aggressive trim, polished typography ── */
     .panel--aubergine {
       display: flex;
       flex-direction: column;
@@ -463,7 +565,7 @@ const cfpTypes = [
     }
     .panel__cta :global(svg) { display: none; }
 
-    /* ── Call for Speakers — two-row header, inline 32px mic, compact ── */
+    /* ── Call for Speakers - two-row header, inline 32px mic, compact ── */
     .panel--pink {
       padding: 1.1rem 1rem;
       border-radius: 18px;
@@ -480,7 +582,7 @@ const cfpTypes = [
     }
     /* Flatten the body + aside wrappers so their children become grid items. */
     .cfp__body, .cfp__aside { display: contents; }
-    /* Inline 32px mic — strip the circle, align with eyebrow baseline. */
+    /* Inline 32px mic - strip the circle, align with eyebrow baseline. */
     .cfp__mic {
       grid-area: mic;
       width: auto;
