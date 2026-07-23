@@ -1,52 +1,48 @@
 ---
-import { getCollection } from 'astro:content';
-import Base from '../../../layouts/Base.astro';
-import Breadcrumbs from '../../../components/Breadcrumbs.astro';
-import SpeakerGrid from '../../../components/SpeakerGrid.svelte';
-import { url } from '../../../lib/url';
+import { getCollection } from "astro:content";
+import Base from "../../../layouts/Base.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import SpeakerGrid from "../../../components/SpeakerGrid.svelte";
+import { getImage } from "astro:assets";
+import { url } from "../../../lib/url";
+
+const opt = async (photo) =>
+  photo
+    ? (await getImage({ src: photo, format: "webp", width: 520 })).src
+    : undefined;
 
 export async function getStaticPaths() {
-  const editions = await getCollection('event');
-  return editions.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+  const editions = await getCollection("event");
+  return editions.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
 }
 
 const { entry } = Astro.props;
 const e = entry.data;
 const slug = entry.id;
 
-// Curated featured speakers (YAML) - rich cards with photo/bio, shown first.
-const featured = (await getCollection('speakers', ({ data }) => data.edition === slug))
-  .sort((a, b) => a.data.name.localeCompare(b.data.name))
-  .map(({ data: s }) => ({
-    name: s.name,
-    role: [s.title, s.org].filter(Boolean).join(', ') || undefined,
-    photo: s.photo ? url(s.photo) : undefined,
-    category: s.category,
-    featured: true,
-  }));
-
-// Full line-up from the generated Indico snapshot (src/content/lineup.yaml,
-// produced by scripts/fetch_speakers.py), minus anyone already featured.
-// Featured line-up entries sort first and keep their badge.
-const featuredNames = new Set(featured.map((s) => s.name.toLowerCase()));
-const rest = (await getCollection('lineup', ({ data }) => data.edition.includes(slug)))
-  .map(({ data: s }) => s)
-  .filter((s) => !featuredNames.has(s.name.toLowerCase()))
-  .sort((a, b) => Number(b.featured) - Number(a.featured) || a.name.localeCompare(b.name))
-  .map((s) => ({
-    name: s.name,
-    role: s.affiliation,
-    photo: s.photo ? url(s.photo) : undefined,
-    category: s.track,
-    featured: s.featured,
-  }));
-
-const speakers = [...featured, ...rest];
+const speakers = await Promise.all(
+  (await getCollection("lineup", ({ data }) => data.edition.includes(slug)))
+    .map(({ data: s }) => s)
+    .sort(
+      (a, b) =>
+        Number(b.featured) - Number(a.featured) || a.name.localeCompare(b.name),
+    )
+    .map(async (s) => ({
+      name: s.name,
+      role: s.affiliation,
+      photo: await opt(s.photo),
+      category: s.track,
+      featured: s.featured,
+    })),
+);
 
 const crumbs = [
-  { label: 'Events', href: url('/events') },
+  { label: "Events", href: url("/events") },
   { label: e.name, href: url(`/events/${slug}`) },
-  { label: 'Speakers' },
+  { label: "Speakers" },
 ];
 ---
 
@@ -59,16 +55,25 @@ const crumbs = [
         Meet the people sharing their ideas, stories and expertise at {e.name}.
       </p>
 
-      {speakers.length === 0 ? (
-        <p class="body empty">Speakers will be announced after the call for proposals closes.</p>
-      ) : (
-        <SpeakerGrid client:load speakers={speakers} />
-      )}
+      {
+        speakers.length === 0 ? (
+          <p class="body empty">
+            Speakers will be announced after the call for proposals closes.
+          </p>
+        ) : (
+          <SpeakerGrid client:load speakers={speakers} />
+        )
+      }
     </div>
   </section>
 </Base>
 
 <style>
-  .speakers-lede { max-width: 42rem; margin-bottom: 2rem; }
-  .empty { margin-top: 1.5rem; }
+  .speakers-lede {
+    max-width: 42rem;
+    margin-bottom: 2rem;
+  }
+  .empty {
+    margin-top: 1.5rem;
+  }
 </style>

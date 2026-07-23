@@ -1,9 +1,9 @@
 ---
-import { getEntry } from 'astro:content';
-import { url } from '../lib/url';
+import { getEntry } from "astro:content";
+import { url } from "../lib/url";
 
-const event = await getEntry('event', 'india-2026');
-const name = event?.data.name ?? 'UbuCon India';
+const event = await getEntry("event", "india-2026");
+const name = event?.data.name ?? "UbuCon India";
 const year = new Date().getFullYear();
 ---
 
@@ -15,15 +15,20 @@ const year = new Date().getFullYear();
     </div>
     <nav aria-label="Footer">
       <ul>
-        <li><a href={url('/')}>Home</a></li>
-        <li><a href={url('/about')}>About</a></li>
-        <li><a href="https://ubuntu.com/community" rel="noopener" target="_blank">Ubuntu community</a></li>
+        <li><a href={url("/")}>Home</a></li>
+        <li><a href={url("/about")}>About</a></li>
+        <li>
+          <a href="https://ubuntu.com/community" rel="noopener" target="_blank"
+            >Ubuntu community</a
+          >
+        </li>
       </ul>
     </nav>
   </div>
   <div class="c-footer__inner c-footer__legal">
     <p>
-      © {year} {name}
+      © {year}
+      {name}
     </p>
   </div>
 </footer>

@@ -1,18 +1,18 @@
 ---
-import '../styles/global.scss';
-import Nav from '../components/Nav.astro';
-import Footer from '../components/Footer.astro';
-import { url } from '../lib/url';
+import "../styles/global.scss";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import { url } from "../lib/url";
 
 interface Props {
   title?: string;
   description?: string;
 }
 
-const siteName = 'UbuCon India 2026';
+const siteName = "UbuCon India 2026";
 const {
   title,
-  description = 'The Indian community conference for Ubuntu and open source.',
+  description = "The Indian community conference for Ubuntu and open source.",
 } = Astro.props;
 const fullTitle = title ? `${title} · ${siteName}` : siteName;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -23,10 +23,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link rel="canonical" href={canonical} />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />

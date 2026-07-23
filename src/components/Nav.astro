@@ -1,43 +1,28 @@
 ---
-import { url } from '../lib/url';
-
-// Context-aware nav. Strip the base to get the app-relative path, then detect
-// whether we're inside an edition namespace (/events/[slug]/…). If so, swap the
-// global links for edition links. "Home" always points at the global home (/)
-// - a reliable escape hatch, not the edition landing.
-const base = import.meta.env.BASE_URL.replace(/\/$/, ''); // '/india'
-const here = (Astro.url.pathname.slice(base.length).replace(/\/$/, '') || '/');
+import { url } from "../lib/url";
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const here = Astro.url.pathname.slice(base.length).replace(/\/$/, "") || "/";
 const slug = here.match(/^\/events\/([^/]+)/)?.[1];
 
 const links = slug
   ? [
-      { label: 'Home', href: url('/') },
-      { label: 'Overview', href: url(`/events/${slug}`) },
-      { label: 'Speakers', href: url(`/events/${slug}/speakers`) },
-      { label: 'Schedule', href: url(`/events/${slug}/schedule`) },
-      { label: 'Sponsors', href: url(`/events/${slug}/sponsors`) },
-      { label: 'Venue', href: url(`/events/${slug}/venue`) },
+      { label: "Home", href: url("/") },
+      { label: "Overview", href: url(`/events/${slug}`) },
+      { label: "Speakers", href: url(`/events/${slug}/speakers`) },
+      { label: "Schedule", href: url(`/events/${slug}/schedule`) },
+      { label: "Sponsors", href: url(`/events/${slug}/sponsors`) },
+      { label: "Venue", href: url(`/events/${slug}/venue`) },
     ]
   : [
-      { label: 'Home', href: url('/') },
-      { label: 'About', href: url('/about') },
-      { label: 'Events', href: url('/events') },
-      { label: 'Contact', href: url('/contact') },
+      { label: "Home", href: url("/") },
+      { label: "About", href: url("/about") },
+      { label: "Events", href: url("/events") },
+      { label: "Contact", href: url("/contact") },
     ];
 
-// Links are already url()-prefixed; `here` is base-stripped. Compare `here`
-// against each href with its base stripped too (strip trailing slash on both).
 const isActive = (href: string) =>
-  href !== '#' && (href.slice(base.length).replace(/\/$/, '') || '/') === here;
+  href !== "#" && (href.slice(base.length).replace(/\/$/, "") || "/") === here;
 ---
-
-<!--
-  Vanilla Framework p-navigation, light theme, sticky.
-  Mobile toggle uses Vanilla's zero-JS `:target` mechanism: the open toggle
-  links to #navigation (this header's id), which flips `:target` and reveals
-  `.p-navigation__nav`; the close toggle links to #, clearing the target.
-  No checkbox hack, no JS - pure Vanilla CSS.
--->
 <style>
   .p-navigation__toggle--open .p-icon--menu,
   .p-navigation__toggle--close .p-icon--close {
@@ -50,19 +35,35 @@ const isActive = (href: string) =>
   <div class="p-navigation__row--25-75">
     <div class="p-navigation__banner">
       <div class="p-navigation__tagged-logo">
-        <a class="p-navigation__link" href={url('/')} aria-label="UbuCon India home">
+        <a
+          class="p-navigation__link"
+          href={url("/")}
+          aria-label="UbuCon India home"
+        >
           <div class="p-navigation__logo-tag">
-            <img class="p-navigation__logo-icon" src={url('/img/ubucon-logo.svg')} alt="UbuCon India"/>
+            <img
+              class="p-navigation__logo-icon"
+              src={url("/img/ubucon-logo.svg")}
+              alt="UbuCon India"
+            />
           </div>
           <span class="p-navigation__logo-title">UbuCon India</span>
         </a>
       </div>
       <ul class="p-navigation__items">
         <li class="p-navigation__item">
-          <a class="p-navigation__toggle--open" href="#navigation" aria-label="Open menu">
+          <a
+            class="p-navigation__toggle--open"
+            href="#navigation"
+            aria-label="Open menu"
+          >
             <i class="p-icon--menu"></i>
           </a>
-          <a class="p-navigation__toggle--close" href="#" aria-label="Close menu">
+          <a
+            class="p-navigation__toggle--close"
+            href="#"
+            aria-label="Close menu"
+          >
             <i class="p-icon--close"></i>
           </a>
         </li>
@@ -72,8 +73,17 @@ const isActive = (href: string) =>
       <ul class="p-navigation__items">
         {
           links.map((l) => (
-            <li class:list={['p-navigation__item', { 'is-selected': isActive(l.href) }]}>
-              <a class="p-navigation__link" href={l.href} aria-current={isActive(l.href) ? 'page' : undefined}>
+            <li
+              class:list={[
+                "p-navigation__item",
+                { "is-selected": isActive(l.href) },
+              ]}
+            >
+              <a
+                class="p-navigation__link"
+                href={l.href}
+                aria-current={isActive(l.href) ? "page" : undefined}
+              >
                 {l.label}
               </a>
             </li>

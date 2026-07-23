@@ -1,6 +1,4 @@
 ---
-// Vanilla Framework pagination. Renders nothing when there's a single page.
-// `hrefFor(n)` maps a page number to its URL.
 interface Props {
   current: number;
   total: number;
@@ -17,12 +15,15 @@ const pages = Array.from({ length: total }, (_, i) => i + 1);
         <li class="p-pagination__item">
           {current > 1 ? (
             <a class="p-pagination__link--previous" href={hrefFor(current - 1)}>
-              <i class="p-icon--chevron-down"></i>
+              <i class="p-icon--chevron-down" />
               <span>Previous</span>
             </a>
           ) : (
-            <span class="p-pagination__link--previous is-disabled" aria-disabled="true">
-              <i class="p-icon--chevron-down"></i>
+            <span
+              class="p-pagination__link--previous is-disabled"
+              aria-disabled="true"
+            >
+              <i class="p-icon--chevron-down" />
               <span>Previous</span>
             </span>
           )}
@@ -30,9 +31,12 @@ const pages = Array.from({ length: total }, (_, i) => i + 1);
         {pages.map((n) => (
           <li class="p-pagination__item">
             <a
-              class:list={['p-pagination__link', { 'is-active': n === current }]}
+              class:list={[
+                "p-pagination__link",
+                { "is-active": n === current },
+              ]}
               href={hrefFor(n)}
-              aria-current={n === current ? 'page' : undefined}
+              aria-current={n === current ? "page" : undefined}
             >
               {n}
             </a>
@@ -42,12 +46,15 @@ const pages = Array.from({ length: total }, (_, i) => i + 1);
           {current < total ? (
             <a class="p-pagination__link--next" href={hrefFor(current + 1)}>
               <span>Next</span>
-              <i class="p-icon--chevron-down"></i>
+              <i class="p-icon--chevron-down" />
             </a>
           ) : (
-            <span class="p-pagination__link--next is-disabled" aria-disabled="true">
+            <span
+              class="p-pagination__link--next is-disabled"
+              aria-disabled="true"
+            >
               <span>Next</span>
-              <i class="p-icon--chevron-down"></i>
+              <i class="p-icon--chevron-down" />
             </span>
           )}
         </li>

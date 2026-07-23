@@ -1,16 +1,19 @@
 ---
-import { getCollection } from 'astro:content';
-import Base from '../../../layouts/Base.astro';
-import Icon from '../../../components/Icon.astro';
-import Breadcrumbs from '../../../components/Breadcrumbs.astro';
-import { Image } from 'astro:assets';
-import { url } from '../../../lib/url';
-import { dateRange, longDate } from '../../../lib/dates';
-import { getIndico } from '../../../lib/indico';
+import { getCollection } from "astro:content";
+import Base from "../../../layouts/Base.astro";
+import Icon from "../../../components/Icon.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import { Image } from "astro:assets";
+import { url } from "../../../lib/url";
+import { dateRange, longDate } from "../../../lib/dates";
+import { getIndico } from "../../../lib/indico";
 
 export async function getStaticPaths() {
-  const editions = await getCollection('event');
-  return editions.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+  const editions = await getCollection("event");
+  return editions.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
 }
 
 const { entry } = Astro.props;
@@ -18,30 +21,32 @@ const e = entry.data;
 const slug = entry.id;
 const now = new Date();
 const past = e.endDate < now;
-const venueSet = e.venue.trim().toLowerCase() !== 'to be announced';
+const venueSet = e.venue.trim().toLowerCase() !== "to be announced";
 const sub = (p: string) => url(`/events/${slug}/${p}`);
 
 // TODO: move this to event.yaml if we decide to change
 // same mission across editions - presentation copy, not per-edition data.
-const MISSION = 'Learn, collaborate, contribute and inspire - growing the Ubuntu and open source community in India.';
+const MISSION =
+  "Learn, collaborate, contribute and inspire - growing the Ubuntu and open source community in India.";
 
-const curated = (await getCollection('speakers', ({ data }) => data.edition === slug))
-  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || a.data.name.localeCompare(b.data.name))
+// Featured speakers come solely from the lineup snapshot (featured: true), single source.
+const featuredSpeakers = (
+  await getCollection(
+    "lineup",
+    ({ data }) => data.featured && data.edition.includes(slug),
+  )
+)
+  .sort((a, b) => a.data.name.localeCompare(b.data.name))
+  .slice(0, 3)
   .map(({ data: s }) => ({
     name: s.name,
-    role: [s.title, s.org].filter(Boolean).join(', ') || undefined,
-    photo: s.photo ? url(s.photo) : undefined,
-    talk: s.talk,
+    role: s.affiliation,
+    photo: s.photo,
+    talk: undefined,
   }));
-const curatedNames = new Set(curated.map((s) => s.name.toLowerCase()));
-const lineupFeatured = (await getCollection('lineup', ({ data }) => data.featured && data.edition.includes(slug)))
-  .map(({ data: s }) => ({ name: s.name, role: s.affiliation, photo: s.photo ? url(s.photo) : undefined, talk: undefined }))
-  .filter((s) => !curatedNames.has(s.name.toLowerCase()))
-  .sort((a, b) => a.name.localeCompare(b.name));
-const featuredSpeakers = [...curated, ...lineupFeatured].slice(0, 3);
 
 // next upcoming edition (for the "next edition" nudge on past pages).
-const upcoming = (await getCollection('event'))
+const upcoming = (await getCollection("event"))
   .filter((x) => x.data.endDate >= now && x.id !== slug)
   .sort((a, b) => a.data.startDate.getTime() - b.data.startDate.getTime())[0];
 
@@ -54,7 +59,9 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
 <Base title={e.name} description={e.intro}>
   <section class="p-strip is-shallow ov-crumbs">
     <div class="u-container">
-      <Breadcrumbs items={[{ label: 'Events', href: url('/events') }, { label: e.name }]} />
+      <Breadcrumbs
+        items={[{ label: "Events", href: url("/events") }, { label: e.name }]}
+      />
     </div>
   </section>
 
@@ -64,33 +71,71 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
       <div class="ov-hero__text">
         <p class="ov-eyebrow">{e.eyebrow}</p>
         <h1 class="ov-title">{e.name}</h1>
-        <p class="ov-tagline">{past ? 'A look back at an unforgettable edition.' : e.tagline}</p>
+        <p class="ov-tagline">
+          {past ? "A look back at an unforgettable edition." : e.tagline}
+        </p>
         <p class="ov-intro">{e.intro}</p>
         <ul class="ov-facts">
-          <li><Icon name="calendar-event-fill" class="i-accent" size={22} /> {dateRange(e.startDate, e.endDate)}</li>
-          <li><Icon name="geo-alt-fill" class="i-accent" size={22} /> {e.city}</li>
+          <li>
+            <Icon name="calendar-event-fill" class="i-accent" size={22} />
+            {dateRange(e.startDate, e.endDate)}
+          </li>
+          <li>
+            <Icon name="geo-alt-fill" class="i-accent" size={22} />
+            {e.city}
+          </li>
         </ul>
         <div class="ov-cta">
-          {!past ? (
-            <>
-              {ticketActive ? (
-                <a class="p-button--positive" href={e.ticketUrl} rel="noopener" target="_blank">Register now</a>
-              ) : (
-                <button class="p-button--positive" type="button" disabled aria-disabled="true" title="Registration not open yet">Register now</button>
-              )}
-              <a class="p-button" href={sub('sponsors')}><Icon name="award-fill" size={16} /> Become a sponsor</a>
-              {hasSchedule && (
-                <a class="p-button--base" href={sub('schedule')}>View schedule</a>
-              )}
-            </>
-          ) : (
-            <>
-              {e.highlightsUrl && (
-                <a class="p-button--positive" href={e.highlightsUrl} rel="noopener" target="_blank">View highlights</a>
-              )}
-              <a class="p-button" href={sub('speakers')}>View speakers</a>
-            </>
-          )}
+          {
+            !past ? (
+              <>
+                {ticketActive ? (
+                  <a
+                    class="p-button--positive"
+                    href={e.ticketUrl}
+                    rel="noopener"
+                    target="_blank"
+                  >
+                    Register now
+                  </a>
+                ) : (
+                  <button
+                    class="p-button--positive"
+                    type="button"
+                    disabled
+                    aria-disabled="true"
+                    title="Registration not open yet"
+                  >
+                    Register now
+                  </button>
+                )}
+                <a class="p-button" href={sub("sponsors")}>
+                  <Icon name="award-fill" size={16} /> Become a sponsor
+                </a>
+                {hasSchedule && (
+                  <a class="p-button--base" href={sub("schedule")}>
+                    View schedule
+                  </a>
+                )}
+              </>
+            ) : (
+              <>
+                {e.highlightsUrl && (
+                  <a
+                    class="p-button--positive"
+                    href={e.highlightsUrl}
+                    rel="noopener"
+                    target="_blank"
+                  >
+                    View highlights
+                  </a>
+                )}
+                <a class="p-button" href={sub("speakers")}>
+                  View speakers
+                </a>
+              </>
+            )
+          }
         </div>
       </div>
       <div class="ov-hero__media">
@@ -102,10 +147,32 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
   <!-- ─────────── Quick facts ─────────── -->
   <div class="ov-facts-band">
     <div class="u-container ov-facts-band__inner">
-      <div class="ov-fact"><strong>{dateRange(e.startDate, e.endDate)}</strong><span>Dates</span></div>
-      <div class="ov-fact"><strong>{e.city.replace(/,.*$/, '')}</strong><span>Location</span></div>
-      {venueSet && <div class="ov-fact"><strong>{e.venue}</strong><span>Venue</span></div>}
-      {past && e.stats[0] && <div class="ov-fact"><strong>{e.stats[0].n}</strong><span>{e.stats[0].label}</span></div>}
+      <div class="ov-fact">
+        <strong>{dateRange(e.startDate, e.endDate)}</strong><span>Dates</span>
+      </div>
+      <div class="ov-fact">
+        <strong>{e.city.replace(/,.*$/, "")}</strong><span>Location</span>
+      </div>
+      {
+        venueSet && (
+          <div class="ov-fact">
+            <>
+              <strong>{e.venue}</strong>
+              <span>Venue</span>
+            </>
+          </div>
+        )
+      }
+      {
+        past && e.stats[0] && (
+          <div class="ov-fact">
+            <>
+              <strong>{e.stats[0].n}</strong>
+              <span>{e.stats[0].label}</span>
+            </>
+          </div>
+        )
+      }
     </div>
   </div>
 
@@ -120,106 +187,174 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
   </section>
 
   <!-- ─────────── Conference highlights ─────────── -->
-  {e.highlights.length > 0 && (
-    <section class="p-strip is-shallow">
-      <div class="u-container">
-        <h2 class="ov-h2">{past ? `Highlights from ${e.edition}` : 'Conference highlights'}</h2>
-        <ul class="ov-cards">
-          {e.highlights.map((h) => {
-            const Tag = h.url ? 'a' : 'div';
-            return (
-              <li class:list={['ov-card', { 'ov-card--link': h.url }]}>
-                <Tag class="ov-card__inner" href={h.url} rel={h.url ? 'noopener' : undefined} target={h.url ? '_blank' : undefined}>
-                  <span class="ov-card__media">
-                    {h.image && <Image src={h.image} alt="" loading="lazy" />}
-                    {h.url && <span class="ov-card__play" aria-hidden="true"><Icon name="play-circle-fill" size={44} /></span>}
-                  </span>
-                  <span class="ov-card__label">{h.label}{h.url && <span class="u-off-screen"> - watch the talk</span>}</span>
-                </Tag>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </section>
-  )}
+  {
+    e.highlights.length > 0 && (
+      <section class="p-strip is-shallow">
+        <div class="u-container">
+          <h2 class="ov-h2">
+            {past ? `Highlights from ${e.edition}` : "Conference highlights"}
+          </h2>
+          <ul class="ov-cards">
+            {e.highlights.map((h) => {
+              const Tag = h.url ? "a" : "div";
+              return (
+                <li class:list={["ov-card", { "ov-card--link": h.url }]}>
+                  <Tag
+                    class="ov-card__inner"
+                    href={h.url}
+                    rel={h.url ? "noopener" : undefined}
+                    target={h.url ? "_blank" : undefined}
+                  >
+                    <span class="ov-card__media">
+                      {h.image && <Image src={h.image} alt="" loading="lazy" />}
+                      {h.url && (
+                        <span class="ov-card__play" aria-hidden="true">
+                          <Icon name="play-circle-fill" size={44} />
+                        </span>
+                      )}
+                    </span>
+                    <span class="ov-card__label">
+                      {h.label}
+                      {h.url && (
+                        <span class="u-off-screen"> - watch the talk</span>
+                      )}
+                    </span>
+                  </Tag>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </section>
+    )
+  }
 
   <!-- ─────────── Featured speakers ─────────── -->
-  {featuredSpeakers.length > 0 && (
-    <section class="p-strip is-shallow">
-      <div class="u-container">
-        <div class="ov-head">
-          <h2 class="ov-h2">Featured Speakers</h2>
-          <a class="ov-link has-icon" href={sub('speakers')}>View all speakers <Icon name="chevron-right" size={14} /></a>
+  {
+    featuredSpeakers.length > 0 && (
+      <section class="p-strip is-shallow">
+        <div class="u-container">
+          <div class="ov-head">
+            <h2 class="ov-h2">Featured Speakers</h2>
+            <a class="ov-link has-icon" href={sub("speakers")}>
+              View all speakers <Icon name="chevron-right" size={14} />
+            </a>
+          </div>
+          <ul class="ov-cards">
+            {featuredSpeakers.map((s) => (
+              <li class="ov-card">
+                <span class="ov-card__media ov-card__media--tall">
+                  {s.photo && (
+                    <Image src={s.photo} alt={s.name} loading="lazy" />
+                  )}
+                </span>
+                <span class="ov-card__body">
+                  <span class="ov-card__name">
+                    {s.name}
+                    {s.role && <span class="ov-card__role">, {s.role}</span>}
+                  </span>
+                  {s.talk && <span class="ov-card__talk">{s.talk}</span>}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul class="ov-cards">
-          {featuredSpeakers.map((s) => (
-            <li class="ov-card">
-              <span class="ov-card__media ov-card__media--tall">
-                {s.photo && <img src={s.photo} alt={s.name} loading="lazy" />}
-              </span>
-              <span class="ov-card__body">
-                <span class="ov-card__name">{s.name}{s.role && <span class="ov-card__role">, {s.role}</span>}</span>
-                {s.talk && <span class="ov-card__talk">{s.talk}</span>}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  )}
+      </section>
+    )
+  }
 
   <!-- ─────────── Call for speakers (upcoming) ─────────── -->
-  {cfpOpen && (
-    <section class="ov-cfp">
-      <div class="u-container">
-        <p class="ov-cfp__eyebrow">Call for speakers</p>
-        <h2 class="ov-cfp__title">Share your voice. Inspire thousands.</h2>
-        <p class="ov-cfp__body">
-          We're looking for passionate speakers to share their ideas, stories and expertise with the
-          open source community.{e.cfpDeadline && ` Applications close ${longDate(e.cfpDeadline)}.`}
-        </p>
-        <div class="ov-cfp__actions">
-          <a class="p-button--positive" href={e.cfpUrl} rel="noopener" target="_blank">Submit a proposal</a>
+  {
+    cfpOpen && (
+      <section class="ov-cfp">
+        <div class="u-container">
+          <p class="ov-cfp__eyebrow">Call for speakers</p>
+          <h2 class="ov-cfp__title">Share your voice. Inspire thousands.</h2>
+          <p class="ov-cfp__body">
+            We're looking for passionate speakers to share their ideas, stories
+            and expertise with the open source community.
+            {e.cfpDeadline && ` Applications close ${longDate(e.cfpDeadline)}.`}
+          </p>
+          <div class="ov-cfp__actions">
+            <a
+              class="p-button--positive"
+              href={e.cfpUrl}
+              rel="noopener"
+              target="_blank"
+            >
+              Submit a proposal
+            </a>
+          </div>
         </div>
-      </div>
-    </section>
-  )}
+      </section>
+    )
+  }
 
   <!-- ─────────── Sponsor nudge / next edition ─────────── -->
   <section class="p-strip is-shallow">
     <div class="u-container">
-      {!past ? (
-        <div class="p-notification--information is-inline ov-note">
-          <div class="p-notification__content">
-            <span class="p-notification__title">Sponsor {e.name}.</span>&nbsp;
-            <p class="p-notification__message">Put your brand in front of a passionate open-source audience.&nbsp;
-              <a class="has-icon ov-note__link" href={sub('sponsors')}>Become a sponsor <Icon name="chevron-right" size={14} /></a>
-            </p>
+      {
+        !past ? (
+          <div class="p-notification--information is-inline ov-note">
+            <div class="p-notification__content">
+              <span class="p-notification__title">Sponsor {e.name}.</span>&nbsp;
+              <p class="p-notification__message">
+                Put your brand in front of a passionate open-source
+                audience.&nbsp;
+                <a class="has-icon ov-note__link" href={sub("sponsors")}>
+                  Become a sponsor <Icon name="chevron-right" size={14} />
+                </a>
+              </p>
+            </div>
           </div>
-        </div>
-      ) : upcoming ? (
-        <div class="p-notification--positive is-inline ov-note">
-          <div class="p-notification__content">
-            <span class="p-notification__title">{upcoming.data.name} is coming.</span>&nbsp;
-            <p class="p-notification__message">Join us on {dateRange(upcoming.data.startDate, upcoming.data.endDate)} in {upcoming.data.city.replace(/,.*$/, '')}.&nbsp;
-              <a class="has-icon ov-note__link" href={url(`/events/${upcoming.id}`)}>See the {upcoming.data.edition} event <Icon name="chevron-right" size={14} /></a>
-            </p>
+        ) : upcoming ? (
+          <div class="p-notification--positive is-inline ov-note">
+            <div class="p-notification__content">
+              <span class="p-notification__title">
+                {upcoming.data.name} is coming.
+              </span>
+              &nbsp;
+              <p class="p-notification__message">
+                Join us on{" "}
+                {dateRange(upcoming.data.startDate, upcoming.data.endDate)} in{" "}
+                {upcoming.data.city.replace(/,.*$/, "")}.&nbsp;
+                <a
+                  class="has-icon ov-note__link"
+                  href={url(`/events/${upcoming.id}`)}
+                >
+                  See the {upcoming.data.edition} event{" "}
+                  <Icon name="chevron-right" size={14} />
+                </a>
+              </p>
+            </div>
           </div>
-        </div>
-      ) : null}
+        ) : null
+      }
     </div>
   </section>
 </Base>
 
 <style>
-  .p-strip.is-shallow { padding-block: 1.75rem; }
-  .ov-crumbs { padding-block: 1.5rem 0; }
-  .ov-narrow { max-width: 60rem; }
+  .p-strip.is-shallow {
+    padding-block: 1.75rem;
+  }
+  .ov-crumbs {
+    padding-block: 1.5rem 0;
+  }
+  .ov-narrow {
+    max-width: 60rem;
+  }
 
   /* Hero */
-  .ov-hero { padding-block: 2.5rem 3rem; }
-  .ov-hero__inner { display: grid; grid-template-columns: 1fr 540px; gap: 3.5rem; align-items: center; }
+  .ov-hero {
+    padding-block: 2.5rem 3rem;
+  }
+  .ov-hero__inner {
+    display: grid;
+    grid-template-columns: 1fr 540px;
+    gap: 3.5rem;
+    align-items: center;
+  }
   .ov-eyebrow {
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -228,43 +363,181 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
     color: #666;
     margin: 0 0 1rem;
   }
-  .ov-title { font-size: clamp(2.25rem, 5vw, 3.375rem); font-weight: 800; color: var(--u-aubergine); line-height: 1.05; margin: 0 0 0.75rem; }
-  .ov-tagline { font-size: 1.5rem; font-weight: 600; color: var(--u-aubergine); margin: 0 0 1rem; }
-  .ov-intro { font-size: 1.125rem; color: #111; line-height: 1.55; margin: 0 0 1.25rem; max-width: 40rem; }
-  .ov-facts { list-style: none; margin: 0 0 1.5rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; }
-  .ov-facts li { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 500; color: var(--u-aubergine); }
-  .ov-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; }
-  .ov-cta .p-button, .ov-cta .p-button--positive { margin: 0; }
-  .ov-cta button:disabled { cursor: not-allowed; }
-  .ov-hero__media { aspect-ratio: 540 / 420; background: #d4d4d4; border-radius: 2px; overflow: hidden; }
-  .ov-hero__media img { width: 100%; height: 100%; object-fit: cover; }
+  .ov-title {
+    font-size: clamp(2.25rem, 5vw, 3.375rem);
+    font-weight: 800;
+    color: var(--u-aubergine);
+    line-height: 1.05;
+    margin: 0 0 0.75rem;
+  }
+  .ov-tagline {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--u-aubergine);
+    margin: 0 0 1rem;
+  }
+  .ov-intro {
+    font-size: 1.125rem;
+    color: #111;
+    line-height: 1.55;
+    margin: 0 0 1.25rem;
+    max-width: 40rem;
+  }
+  .ov-facts {
+    list-style: none;
+    margin: 0 0 1.5rem;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+  }
+  .ov-facts li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: var(--u-aubergine);
+  }
+  .ov-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .ov-cta .p-button,
+  .ov-cta .p-button--positive {
+    margin: 0;
+  }
+  .ov-cta button:disabled {
+    cursor: not-allowed;
+  }
+  .ov-hero__media {
+    aspect-ratio: 540 / 420;
+    background: #d4d4d4;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .ov-hero__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
   /* Quick facts band */
-  .ov-facts-band { background: #f6f6f6; border-block: 1px solid var(--u-placeholder); }
-  .ov-facts-band__inner { display: flex; flex-wrap: wrap; gap: 1.5rem 4rem; padding-block: 1.75rem; }
-  .ov-fact { display: grid; gap: 0.25rem; }
-  .ov-fact strong { font-size: 1.375rem; font-weight: 700; color: var(--u-aubergine); }
-  .ov-fact span { text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.8rem; font-weight: 500; color: #666; }
+  .ov-facts-band {
+    background: #f6f6f6;
+    border-block: 1px solid var(--u-placeholder);
+  }
+  .ov-facts-band__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 4rem;
+    padding-block: 1.75rem;
+  }
+  .ov-fact {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .ov-fact strong {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--u-aubergine);
+  }
+  .ov-fact span {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #666;
+  }
 
   /* Headings + body */
-  .ov-h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; color: var(--u-aubergine); margin: 0 0 1rem; }
-  .ov-h3 { font-size: 1.25rem; font-weight: 700; color: var(--u-aubergine); margin: 1.5rem 0 0.75rem; }
-  .ov-body { font-size: 1.125rem; color: #4d4d4d; line-height: 1.6; margin: 0; max-width: 62rem; }
-  .ov-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
-  .ov-head .ov-h2 { margin: 0; }
-  .ov-link { color: #06c; font-weight: 600; }
+  .ov-h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--u-aubergine);
+    margin: 0 0 1rem;
+  }
+  .ov-h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--u-aubergine);
+    margin: 1.5rem 0 0.75rem;
+  }
+  .ov-body {
+    font-size: 1.125rem;
+    color: #4d4d4d;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 62rem;
+  }
+  .ov-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+  .ov-head .ov-h2 {
+    margin: 0;
+  }
+  .ov-link {
+    color: #06c;
+    font-weight: 600;
+  }
 
   /* Card grids (highlights + featured speakers) */
-  .ov-cards { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-  .ov-card { display: flex; flex-direction: column; background: #fff; border: 1px solid #d9d9d9; border-radius: 2px; overflow: hidden; transition: border-color 0.15s ease; }
-  .ov-card__inner { display: flex; flex-direction: column; height: 100%; text-decoration: none; color: inherit; }
-  .ov-card__media { position: relative; aspect-ratio: 16 / 9; background: #d4d4d4; }
-  .ov-card__media--tall { aspect-ratio: 3 / 2; }
-  .ov-card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s ease; }
-  .ov-card__label { padding: 1.1rem 1.25rem; font-size: 1.25rem; font-weight: 600; color: var(--u-aubergine); }
+  .ov-cards {
+    list-style: none;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .ov-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+    overflow: hidden;
+    transition: border-color 0.15s ease;
+  }
+  .ov-card__inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+  .ov-card__media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: #d4d4d4;
+  }
+  .ov-card__media--tall {
+    aspect-ratio: 3 / 2;
+  }
+  .ov-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s ease;
+  }
+  .ov-card__label {
+    padding: 1.1rem 1.25rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--u-aubergine);
+  }
   /* Video-linked highlight cards. */
-  .ov-card--link:hover { border-color: var(--u-orange); }
-  .ov-card--link:hover .ov-card__media img { transform: scale(1.04); }
+  .ov-card--link:hover {
+    border-color: var(--u-orange);
+  }
+  .ov-card--link:hover .ov-card__media img {
+    transform: scale(1.04);
+  }
   .ov-card__play {
     position: absolute;
     inset: 0;
@@ -273,32 +546,91 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
     color: #fff;
     opacity: 0.92;
     filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.55));
-    transition: transform 0.15s ease, opacity 0.15s ease;
+    transition:
+      transform 0.15s ease,
+      opacity 0.15s ease;
   }
   .ov-card--link:hover .ov-card__play,
-  .ov-card--link:focus-within .ov-card__play { transform: scale(1.1); opacity: 1; }
-  .ov-card__body { display: grid; gap: 0.35rem; padding: 1rem 1.15rem 1.25rem; }
-  .ov-card__name { font-weight: 600; color: var(--u-aubergine); font-size: 1.125rem; }
-  .ov-card__role { color: var(--u-orange); font-weight: 400; }
-  .ov-card__talk { color: #595959; font-size: 0.9rem; }
+  .ov-card--link:focus-within .ov-card__play {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  .ov-card__body {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1rem 1.15rem 1.25rem;
+  }
+  .ov-card__name {
+    font-weight: 600;
+    color: var(--u-aubergine);
+    font-size: 1.125rem;
+  }
+  .ov-card__role {
+    color: var(--u-orange);
+    font-weight: 400;
+  }
+  .ov-card__talk {
+    color: #595959;
+    font-size: 0.9rem;
+  }
 
   /* CFP panel */
-  .ov-cfp { background: #f1f9f1; padding-block: 2.5rem; }
-  .ov-cfp__eyebrow { text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.875rem; font-weight: 500; color: #4d804d; margin: 0 0 0.75rem; }
-  .ov-cfp__title { font-size: clamp(1.5rem, 3vw, 1.875rem); font-weight: 700; color: var(--u-aubergine); margin: 0 0 0.75rem; }
-  .ov-cfp__body { font-size: 1.125rem; color: #595959; line-height: 1.55; margin: 0 0 1.25rem; max-width: 55rem; }
-  .ov-cfp__actions .p-button--positive { margin: 0; }
+  .ov-cfp {
+    background: #f1f9f1;
+    padding-block: 2.5rem;
+  }
+  .ov-cfp__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4d804d;
+    margin: 0 0 0.75rem;
+  }
+  .ov-cfp__title {
+    font-size: clamp(1.5rem, 3vw, 1.875rem);
+    font-weight: 700;
+    color: var(--u-aubergine);
+    margin: 0 0 0.75rem;
+  }
+  .ov-cfp__body {
+    font-size: 1.125rem;
+    color: #595959;
+    line-height: 1.55;
+    margin: 0 0 1.25rem;
+    max-width: 55rem;
+  }
+  .ov-cfp__actions .p-button--positive {
+    margin: 0;
+  }
 
-  .ov-note { margin: 0; }
-  .ov-note a { font-weight: 600; }
+  .ov-note {
+    margin: 0;
+  }
+  .ov-note a {
+    font-weight: 600;
+  }
 
   @media (max-width: 900px) {
-    .ov-hero__inner { grid-template-columns: 1fr; gap: 2rem; }
-    .ov-hero__media { max-width: 540px; }
-    .ov-cards { grid-template-columns: 1fr; }
+    .ov-hero__inner {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .ov-hero__media {
+      max-width: 540px;
+    }
+    .ov-cards {
+      grid-template-columns: 1fr;
+    }
   }
   @media (max-width: 600px) {
-    .ov-cta { flex-direction: column; align-items: stretch; }
-    .ov-cta .p-button, .ov-cta .p-button--positive { text-align: center; }
+    .ov-cta {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .ov-cta .p-button,
+    .ov-cta .p-button--positive {
+      text-align: center;
+    }
   }
 </style>

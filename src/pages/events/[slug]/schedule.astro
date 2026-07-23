@@ -1,14 +1,17 @@
 ---
-import { getCollection } from 'astro:content';
-import Base from '../../../layouts/Base.astro';
-import Breadcrumbs from '../../../components/Breadcrumbs.astro';
-import { url } from '../../../lib/url';
-import { timeIST, dayLabel } from '../../../lib/dates';
-import { getIndico } from '../../../lib/indico';
+import { getCollection } from "astro:content";
+import Base from "../../../layouts/Base.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import { url } from "../../../lib/url";
+import { timeIST, dayLabel } from "../../../lib/dates";
+import { getIndico } from "../../../lib/indico";
 
 export async function getStaticPaths() {
-  const editions = await getCollection('event');
-  return editions.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+  const editions = await getCollection("event");
+  return editions.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
 }
 
 const { entry } = Astro.props;
@@ -27,47 +30,80 @@ for (const s of sessions) {
 }
 ---
 
-<Base title={`Schedule · ${e.name}`} description={`Session schedule for ${e.name}.`}>
+<Base
+  title={`Schedule · ${e.name}`}
+  description={`Session schedule for ${e.name}.`}
+>
   <section class="p-strip">
     <div class="u-container">
-      <Breadcrumbs items={[{ label: 'Events', href: url('/events') }, { label: e.name, href: url(`/events/${slug}`) }, { label: 'Schedule' }]} />
+      <Breadcrumbs
+        items={[
+          { label: "Events", href: url("/events") },
+          { label: e.name, href: url(`/events/${slug}`) },
+          { label: "Schedule" },
+        ]}
+      />
       <h1 class="h-xl u-aubergine">Schedule</h1>
 
-      {sessions.length === 0 ? (
-        <p class="body empty">The schedule will be published once the programme is finalised.</p>
-      ) : (
-        [...days].map(([label, items]) => (
-          <div class="day">
-            <h2 class="h-md">{label}</h2>
-            <ul class="sessions">
-              {items.map((s) => (
-                <li class="p-card session">
-                  <span class="session__time">{timeIST(s.start)}–{timeIST(s.end)}</span>
-                  <div class="session__body">
-                    <h3 class="session__title">{s.title}</h3>
-                    <p class="session__meta">
-                      {s.speakers.length > 0 && (
-                        <a href={url(`/events/${slug}/speakers`)}>{s.speakers.join(', ')}</a>
-                      )}
-                      {s.track && <span class="session__track">{s.track}</span>}
-                      {s.room && <span>{s.room}</span>}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))
-      )}
+      {
+        sessions.length === 0 ? (
+          <p class="body empty">
+            The schedule will be published once the programme is finalised.
+          </p>
+        ) : (
+          [...days].map(([label, items]) => (
+            <div class="day">
+              <h2 class="h-md">{label}</h2>
+              <ul class="sessions">
+                {items.map((s) => (
+                  <li class="p-card session">
+                    <span class="session__time">
+                      {timeIST(s.start)}–{timeIST(s.end)}
+                    </span>
+                    <div class="session__body">
+                      <h3 class="session__title">{s.title}</h3>
+                      <p class="session__meta">
+                        {s.speakers.length > 0 && (
+                          <a href={url(`/events/${slug}/speakers`)}>
+                            {s.speakers.join(", ")}
+                          </a>
+                        )}
+                        {s.track && (
+                          <span class="session__track">{s.track}</span>
+                        )}
+                        {s.room && <span>{s.room}</span>}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        )
+      }
     </div>
   </section>
 </Base>
 
 <style>
-  .empty { margin-top: 1.5rem; }
-  .day { margin-top: 1.5rem; }
-  .sessions { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
-  .session { display: flex; gap: 1.25rem; align-items: baseline; }
+  .empty {
+    margin-top: 1.5rem;
+  }
+  .day {
+    margin-top: 1.5rem;
+  }
+  .sessions {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .session {
+    display: flex;
+    gap: 1.25rem;
+    align-items: baseline;
+  }
   .session__time {
     flex: 0 0 auto;
     font-weight: 700;
@@ -75,7 +111,12 @@ for (const s of sessions) {
     font-variant-numeric: tabular-nums;
     min-width: 6.5rem;
   }
-  .session__title { font-size: 1.125rem; font-weight: 700; color: var(--u-aubergine); margin: 0; }
+  .session__title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--u-aubergine);
+    margin: 0;
+  }
   .session__meta {
     display: flex;
     flex-wrap: wrap;
@@ -84,10 +125,19 @@ for (const s of sessions) {
     color: #555;
     font-size: 0.95rem;
   }
-  .session__meta a { color: var(--u-aubergine); font-weight: 600; }
-  .session__track { color: var(--u-orange); font-weight: 600; }
+  .session__meta a {
+    color: var(--u-aubergine);
+    font-weight: 600;
+  }
+  .session__track {
+    color: var(--u-orange);
+    font-weight: 600;
+  }
 
   @media (max-width: 600px) {
-    .session { flex-direction: column; gap: 0.25rem; }
+    .session {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
   }
 </style>

@@ -1,98 +1,131 @@
 ---
-import { getCollection } from 'astro:content';
-import Base from '../../../layouts/Base.astro';
-import Icon from '../../../components/Icon.astro';
-import Breadcrumbs from '../../../components/Breadcrumbs.astro';
-import { url } from '../../../lib/url';
-import { dateRange } from '../../../lib/dates';
+import { getCollection } from "astro:content";
+import Base from "../../../layouts/Base.astro";
+import Icon from "../../../components/Icon.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import { url } from "../../../lib/url";
+import { dateRange } from "../../../lib/dates";
 
 export async function getStaticPaths() {
-  const editions = await getCollection('event');
-  return editions.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+  const editions = await getCollection("event");
+  return editions.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
 }
 
 const { entry } = Astro.props;
 const e = entry.data;
 const slug = entry.id;
-const announced = e.venue.trim().toLowerCase() !== 'to be announced';
+const announced = e.venue.trim().toLowerCase() !== "to be announced";
 const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
   `${e.venue}, ${e.city}`,
 )}`;
 
 const crumbs = [
-  { label: 'Events', href: url('/events') },
+  { label: "Events", href: url("/events") },
   { label: e.name, href: url(`/events/${slug}`) },
-  { label: 'Venue' },
+  { label: "Venue" },
 ];
 ---
 
-<Base title={`Venue · ${e.name}`} description={`Venue and location for ${e.name}.`}>
+<Base
+  title={`Venue · ${e.name}`}
+  description={`Venue and location for ${e.name}.`}
+>
   <section class="p-strip">
     <div class="u-container">
       <Breadcrumbs items={crumbs} />
       <h1 class="h-xl u-aubergine">Venue</h1>
 
-      {announced ? (
-        <>
-          <p class="body venue-lede">
-            Join us in {e.city.replace(/,.*$/, '')} for two days of talks, workshops and
-            community. Here's how to reach the venue.
-          </p>
+      {
+        announced ? (
+          <>
+            <p class="body venue-lede">
+              Join us in {e.city.replace(/,.*$/, "")} for two days of talks,
+              workshops and community. Here's how to reach the venue.
+            </p>
 
-          <div class="venue-grid">
-            <!-- Map: Google Maps embed when set, grey placeholder otherwise. -->
-            <div class="venue-map">
-              {e.mapEmbed ? (
-                <iframe
-                  src={e.mapEmbed}
-                  title={`Map of ${e.venue}`}
-                  loading="lazy"
-                  referrerpolicy="no-referrer-when-downgrade"
-                  allowfullscreen
-                ></iframe>
-              ) : (
-                <span class="venue-map__ph">Map</span>
-              )}
-            </div>
+            <div class="venue-grid">
+              <div class="venue-map">
+                {e.mapEmbed ? (
+                  <iframe
+                    src={e.mapEmbed}
+                    title={`Map of ${e.venue}`}
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    allowfullscreen
+                  />
+                ) : (
+                  <span class="venue-map__ph">Map</span>
+                )}
+              </div>
 
-            <!-- Venue card -->
-            <div class="p-card venue-card">
-              <p class="venue-card__name"><Icon name="geo-alt-fill" class="i-accent" size={26} /> {e.venue}</p>
-              {e.venueAddress && <p class="venue-card__addr">{e.venueAddress}</p>}
-              <p class="venue-card__dates">{dateRange(e.startDate, e.endDate)}</p>
-              <a class="p-button--positive venue-card__cta" href={mapsUrl} rel="noopener" target="_blank">Get directions</a>
-            </div>
-          </div>
-
-          {e.gettingThere.length > 0 && (
-            <div class="getting-there">
-              <h2 class="h-md getting-there__title">Getting there</h2>
-              <div class="c-accordion">
-                {e.gettingThere.map((g, i) => (
-                  <details class="c-accordion__item" open={i === 0}>
-                    <summary class="c-accordion__tab">
-                      <span>{g.title}</span>
-                      <Icon name="chevron-down" size={20} class="c-accordion__chev" />
-                    </summary>
-                    <div class="c-accordion__panel"><p>{g.body}</p></div>
-                  </details>
-                ))}
+              {/* Venue card */}
+              <div class="p-card venue-card">
+                <p class="venue-card__name">
+                  <Icon name="geo-alt-fill" class="i-accent" size={26} />{" "}
+                  {e.venue}
+                </p>
+                {e.venueAddress && (
+                  <p class="venue-card__addr">{e.venueAddress}</p>
+                )}
+                <p class="venue-card__dates">
+                  {dateRange(e.startDate, e.endDate)}
+                </p>
+                <a
+                  class="p-button--positive venue-card__cta"
+                  href={mapsUrl}
+                  rel="noopener"
+                  target="_blank"
+                >
+                  Get directions
+                </a>
               </div>
             </div>
-          )}
-        </>
-      ) : (
-        <p class="body empty">
-          The venue for {e.name} in {e.city} is <strong>to be announced</strong>. Check back soon.
-        </p>
-      )}
+
+            {e.gettingThere.length > 0 && (
+              <div class="getting-there">
+                <h2 class="h-md getting-there__title">Getting there</h2>
+                <div class="c-accordion">
+                  {e.gettingThere.map((g, i) => (
+                    <details class="c-accordion__item" open={i === 0}>
+                      <summary class="c-accordion__tab">
+                        <span>{g.title}</span>
+                        <Icon
+                          name="chevron-down"
+                          size={20}
+                          class="c-accordion__chev"
+                        />
+                      </summary>
+                      <div class="c-accordion__panel">
+                        <p>{g.body}</p>
+                      </div>
+                    </details>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <p class="body empty">
+            The venue for {e.name} in {e.city} is{" "}
+            <strong>to be announced</strong>. Check back soon.
+          </p>
+        )
+      }
     </div>
   </section>
 </Base>
 
 <style>
-  .venue-lede { max-width: 42rem; margin-bottom: 2rem; }
-  .empty { margin-top: 1.5rem; }
+  .venue-lede {
+    max-width: 42rem;
+    margin-bottom: 2rem;
+  }
+  .empty {
+    margin-top: 1.5rem;
+  }
 
   .venue-grid {
     display: grid;
@@ -110,8 +143,16 @@ const crumbs = [
     place-items: center;
     overflow: hidden;
   }
-  .venue-map iframe { width: 100%; height: 100%; border: 0; min-height: 360px; }
-  .venue-map__ph { color: #808080; font-weight: 500; }
+  .venue-map iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    min-height: 360px;
+  }
+  .venue-map__ph {
+    color: #808080;
+    font-weight: 500;
+  }
 
   .venue-card {
     border-radius: 2px;
@@ -129,15 +170,33 @@ const crumbs = [
     color: var(--u-aubergine);
     margin: 0;
   }
-  .venue-card__addr { color: #595959; margin: 0; }
-  .venue-card__dates { color: var(--u-orange); font-weight: 500; margin: 0; }
-  .venue-card__cta { margin: auto 0 0; text-align: center; }
+  .venue-card__addr {
+    color: #595959;
+    margin: 0;
+  }
+  .venue-card__dates {
+    color: var(--u-orange);
+    font-weight: 500;
+    margin: 0;
+  }
+  .venue-card__cta {
+    margin: auto 0 0;
+    text-align: center;
+  }
 
   /* ── Getting-there accordion: native <details>, styled to match Vanilla ── */
-  .getting-there { margin-top: 2.5rem; }
-  .getting-there__title { margin-top: 0; }
-  .c-accordion { border-top: 1px solid var(--u-placeholder); }
-  .c-accordion__item { border-bottom: 1px solid var(--u-placeholder); }
+  .getting-there {
+    margin-top: 2.5rem;
+  }
+  .getting-there__title {
+    margin-top: 0;
+  }
+  .c-accordion {
+    border-top: 1px solid var(--u-placeholder);
+  }
+  .c-accordion__item {
+    border-bottom: 1px solid var(--u-placeholder);
+  }
   .c-accordion__tab {
     display: flex;
     align-items: center;
@@ -150,15 +209,35 @@ const crumbs = [
     color: var(--u-aubergine);
     list-style: none;
   }
-  .c-accordion__tab::-webkit-details-marker { display: none; }
-  .c-accordion__chev { transition: transform 0.15s ease; color: var(--u-aubergine); }
-  .c-accordion__item[open] .c-accordion__chev { transform: rotate(180deg); }
-  .c-accordion__panel { padding: 0 0 1.25rem; }
-  .c-accordion__panel p { margin: 0; color: #595959; line-height: 1.55; max-width: 60rem; }
+  .c-accordion__tab::-webkit-details-marker {
+    display: none;
+  }
+  .c-accordion__chev {
+    transition: transform 0.15s ease;
+    color: var(--u-aubergine);
+  }
+  .c-accordion__item[open] .c-accordion__chev {
+    transform: rotate(180deg);
+  }
+  .c-accordion__panel {
+    padding: 0 0 1.25rem;
+  }
+  .c-accordion__panel p {
+    margin: 0;
+    color: #595959;
+    line-height: 1.55;
+    max-width: 60rem;
+  }
 
   @media (max-width: 820px) {
-    .venue-grid { grid-template-columns: 1fr; }
-    .venue-map { min-height: 260px; }
-    .venue-map iframe { min-height: 260px; }
+    .venue-grid {
+      grid-template-columns: 1fr;
+    }
+    .venue-map {
+      min-height: 260px;
+    }
+    .venue-map iframe {
+      min-height: 260px;
+    }
   }
 </style>
