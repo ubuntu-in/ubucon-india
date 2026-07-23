@@ -1,5 +1,48 @@
-# Placeholder sponsor. Add real sponsors as entries here.
 - id: canonical
+  editions: [asia-2024, india-2026]
   name: Canonical
-  tier: platinum
+  tier: diamond
+  logo: /img/sponsors/canonical.svg
   url: https://canonical.com
+
+- id: cdac
+  editions: [asia-2024]
+  name: CDAC
+  tier: gold
+  logo: /img/sponsors/cdac.png
+  url: https://cdac.in
+
+- id: qualcomm
+  editions: [india-2025]
+  name: Qualcomm
+  tier: gold
+  logo: /img/sponsors/qualcomm.svg
+  url: https://qualcomm.com
+
+- id: onlyoffice
+  editions: [asia-2024]
+  name: ONLYOFFICE
+  tier: silver
+  logo: /img/sponsors/onlyoffice.svg
+  url: https://onlyoffice.com
+
+- id: fossunited
+  editions: [india-2025]
+  name: FOSS United
+  tier: community
+  logo: /img/sponsors/fossunited.svg
+  url: https://fossunited.org
+
+- id: itsfoss
+  editions: [india-2025, india-2026]
+  name: It's FOSS
+  tier: community
+  logo: /img/sponsors/itsfoss.png
+  url: https://itsfoss.com
+
+- id: konfhub
+  editions: [india-2025, india-2026]
+  name: KonfHub
+  tier: community
+  logo: /img/sponsors/konfhub.svg
+  url: https://konfhub.com

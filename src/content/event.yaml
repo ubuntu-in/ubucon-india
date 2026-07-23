@@ -1,16 +1,63 @@
-# Single source of truth for event details. Edit here, not in templates.
 india-2026:
   name: UbuCon India 2026
   edition: "2026"
   startDate: 2026-11-14
   endDate: 2026-11-15
-  venue: To be announced
   city: Bengaluru, India
-  eyebrow: The Ubuntu India Community Conference
+  eyebrow: The Ubuntu India Community Conference of 2026
   tagline: Building together, for a human future.
-  intro: >-
+  intro: |
     Join Ubuntu enthusiasts, developers, open source contributors and innovators
     from across India and the world.
-  ticketUrl: https://konfhub.com/ubucon-india-2026
-  cfpUrl: https://konfhub.com/ubucon-india-2026
+  cover: /img/2026/cover.jpg
+  indicoId: 157
+  cfpUrl: https://events.canonical.com/event/157/abstracts/
   cfpDeadline: 2026-09-30
+  venue: BMS College of Engineering
+  venueAddress: Bull Temple Rd, Basavanagudi, Bengaluru, Karnataka 560004
+  mapEmbed: https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.4720098421913!2d77.56422961107282!3d12.941620315481376!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae158b11e34d2f%3A0x5f4adbdbab8bd80f!2sBMS%20College%20of%20Engineering!5e0!3m2!1sen!2sin!4v1784802109426!5m2!1sen!2sin
+
+
+india-2025:
+  name: UbuCon India 2025
+  edition: "2025"
+  startDate: 2025-11-15
+  endDate: 2025-11-16
+  ticketsUrl: https://konfhub.com/ubucon-india-2025
+  venue: Indian Institute of Science (IISc)
+  venueAddress: Dr. CV Raman Rd, Bengaluru, Karnataka 560012
+  mapEmbed: https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.2924986550383!2d77.5659261!3d13.0170362!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae17d757d11bfb%3A0x3fc1cd64d345c13f!2sIndian%20Institute%20of%20Science%2C%20Bengaluru%20(IISC%20-%20Bangalore)!5e0!3m2!1sen!2sin!4v1784800784641!5m2!1sen!2sin
+  city: Bengaluru, India
+  eyebrow: The Ubuntu India Community Conference of 2025
+  tagline: Ubuntu, build together
+  cover: /img/2025/group.jpg
+  indicoId: 136
+  intro: |
+    The 2025 edition brought together the Ubuntu India community for two days of
+    talks, workshops and connection. Relive the highlights below.
+  highlightsUrl: https://photos.app.goo.gl/2i1jvnY9Mcu4n9fR8
+  highlights:
+    - label: Inspiring talks
+      image: /img/2025/talk.jpg
+    - label: Qualcomm x UbuCon India
+      image: /img/2025/qualcomm.jpg
+    - label: Hands-on workshops
+      image: /img/2025/hands-on.jpg
+  stats:
+    - n: "~300"
+      label: Attendees
+    - n: "35+"
+      label: Speakers
+    - n: "38"
+      label: Sessions
+  gallery:
+    - src: /img/2025/group.jpg
+      alt: Group photo of attendees
+    - src: /img/2025/keynote.jpg
+      alt: UbuCon India 2025 keynote hall
+    - src: /img/2025/workshop.jpg
+      alt: Hands-on workshop session
+    - src: /img/2025/community.jpg
+      alt: Community networking area
+    - src: /img/2025/bof.jpg
+      alt: Birds-of-a-feather discussion
