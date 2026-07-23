@@ -6,7 +6,7 @@ import Icon from '../components/Icon.astro';
 import { url } from '../lib/url';
 import heroArt from '../assets/hero-bengaluru.png';
 
-// Feature the nearest upcoming edition (fallback: latest overall).
+// feature the nearest upcoming edition (fallback: latest overall).
 const now = new Date();
 const editions = (await getCollection('event')).sort(
   (a, b) => a.data.startDate.getTime() - b.data.startDate.getTime(),
@@ -14,30 +14,36 @@ const editions = (await getCollection('event')).sort(
 const event = editions.find((ev) => ev.data.endDate >= now) ?? editions[editions.length - 1];
 const e = event.data;
 
-// Look-back: latest past edition (its own event entry is the single source).
-// Shown only if that edition has look-back content (stats or gallery).
+// show CTA based on time
+// if tickets are available, show register button
+// if the event is past, show highlights button
+// else show sponsor button
+const past = e.endDate < now;
+const cta = past
+  ? (e.highlightsUrl ? { label: 'View Highlights', href: e.highlightsUrl, external: true } : null)
+  : e.ticketUrl
+    ? { label: 'Register Now', href: e.ticketUrl, external: true }
+    : { label: 'Become a Sponsor', href: url(`/events/${event.id}/sponsors`), external: false };
+
+// lookback to the latest past edition
 const pastEditions = editions.filter((x) => x.data.endDate < now);
 const lbEntry = pastEditions.at(-1) ?? null;
 const lb = lbEntry?.data ?? null;
 const showLookback = lb && (lb.stats.length > 0 || lb.gallery.length > 0);
 
-// Highlights: featured edition's if set, else fall back to latest past edition's
-// (so the cards show real last-year content until this year's are filled in).
+// highlights, featured edition's if set, else fall back to latest past edition's
 const highlights = e.highlights.length > 0 ? e.highlights : (lb?.highlights ?? []);
 
-// Sponsors from the collection. Marquee thresholds differ by viewport (SSG, so
-// we tag a tier here and let CSS switch): phone marquees at >3 (logos wrap ugly
-// sooner on narrow screens), desktop stays a static row until 6+.
 const sponsors = await getCollection('sponsors');
 const n = sponsors.length;
 const useMarquee = n > 3; // phone threshold - needs the duplicated loop DOM
 const marqueeAll = n >= 6; // wide enough to marquee on desktop too
 
 const day = (d: Date) => d.getUTCDate();
-const monthYear = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(e.endDate);
+const monthYear = new Intl.DateTimeFormat('en-IN', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(e.endDate);
 const dates = `${day(e.startDate)} - ${day(e.endDate)} ${monthYear}`;
 const cfpDeadline = e.cfpDeadline
-  ? new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(e.cfpDeadline)
+  ? new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(e.cfpDeadline)
   : null;
 
 const cfpTypes = [
@@ -62,10 +68,12 @@ const cfpTypes = [
           <span><Icon name="geo-alt-fill" class="i-accent" size={18} /> {e.city}</span>
         </div>
         <div class="hero__cta">
-          <a class="p-button--positive has-icon" href={e.ticketUrl} rel="noopener" target="_blank">
-            <span>Register Now</span><Icon name="box-arrow-up-right" size={16} />
-          </a>
-          <a class="p-button has-icon" href={url('/about')}>
+          {cta && (
+            <a class="p-button--positive has-icon" href={cta.href} rel={cta.external ? 'noopener' : undefined} target={cta.external ? '_blank' : undefined}>
+              <span>{cta.label}</span><Icon name={cta.external ? 'box-arrow-up-right' : 'chevron-right'} size={16} />
+            </a>
+          )}
+          <a class="p-button has-icon" href={url(`/events/${event.id}`)}>
             <span>Learn More</span><Icon name="chevron-right" size={16} />
           </a>
         </div>
