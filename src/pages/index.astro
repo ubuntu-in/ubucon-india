@@ -73,7 +73,7 @@ const cfpTypes = [
               <span>{cta.label}</span><Icon name={cta.external ? 'box-arrow-up-right' : 'chevron-right'} size={16} />
             </a>
           )}
-          <a class="p-button has-icon" href={url(`/events/${event.id}`)}>
+          <a class="p-button has-icon" href={url(`/events/${event.id}`)} aria-label={`Learn more about UbuCon India ${e.edition}`}>
             <span>Learn More</span><Icon name="chevron-right" size={16} />
           </a>
         </div>
@@ -212,11 +212,12 @@ const cfpTypes = [
   :global(.i-accent) { color: var(--u-orange); }
 
   .eyebrow {
-    color: var(--u-orange);
+    color: var(--u-orange-dark);
     font-weight: 600;
     font-size: 1.125rem;
     margin-bottom: 0.5rem;
   }
+  .panel--aubergine .eyebrow { color: var(--u-orange); } /* bright orange reads on dark bg */
   .h-xl {
     font-size: clamp(2rem, 3.4vw, 3.125rem);
     font-weight: 800;
@@ -483,7 +484,7 @@ const cfpTypes = [
     .sponsors__marquee--phone .sponsors__track .is-dup { display: none; }
   }
   .link-accent {
-    color: var(--u-orange);
+    color: var(--u-orange-dark);
     font-weight: 700;
     text-decoration: none;
     font-size: 1.125rem;
