@@ -1,23 +1,19 @@
-// UbuCon India 2026 - global stylesheet.
-// Strict Vanilla Framework (Canonical). No custom design system.
-// ponytail: full framework include; prune to used patterns if CSS weight matters.
 @import 'vanilla-framework';
 @include vanilla;
 
-// UbuCon India brand tokens (Ubuntu palette). Used by scoped component styles.
+// UbuCon India brand tokens (Ubuntu palette)
 :root {
-  --u-orange: #e95420; // Ubuntu orange (exact, from Figma)
+  --u-orange: #e95420; // ubuntu orange
   --u-orange-dark: #c7431a;
-  --u-aubergine: #2c001e; // Ubuntu aubergine - headings, panels, footer
+  --u-aubergine: #2c001e; // ubuntu aubergine
   --u-mute: #56334b; // muted aubergine (logo "2026", secondary)
-  --u-green: #0e8420; // Vanilla positive green (Register CTA)
-  --u-pink: #fceee9; // Call-for-speakers panel tint
-  --u-placeholder: #d9d9d9; // grey image placeholders (matches Figma)
-  --u-maxw: 1232px; // Figma nav/content max width
+  --u-green: #0e8420; // vanilla positive green
+  --u-pink: #fceee9; // call-for-speakers panel tint
+  --u-placeholder: #d9d9d9; // grey image placeholders
+  --u-maxw: 1232px; // nav/content max width
 }
 
-// Shared brand helpers. index.astro/about.astro keep local copies (pre-dating
-// this); the events pages rely on these globals so they don't each redefine.
+// shared brand helpers.
 .u-container {
   max-width: var(--u-maxw);
   margin: 0 auto;

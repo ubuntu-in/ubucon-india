@@ -11,11 +11,10 @@ don't need any of this - see [CONTRIBUTIONS.md](CONTRIBUTIONS.md).
 | Framework | [Astro](https://astro.build) 7 | Static output, zero JS by default, content collections. |
 | Design system | [Vanilla Framework](https://vanillaframework.io) 4 (SCSS) | Canonical's system; keeps us on-brand with Ubuntu. |
 | Interactivity | [Svelte](https://svelte.dev) 5 islands | Only where the DOM genuinely needs JS. |
-| Package manager | bun | Lockfile is `bun.lock`. |
-| Host | GitHub Pages | Project page at `ubucon.org/india`. |
+| Package manager | bun | You can use any other of your choice. |
+| Host | GitHub Pages | Project page at `in.ubucon.org`. |
 
-Node >= 22.12. Config: `astro.config.mjs` (note `base: '/india'`),
-`svelte.config.js`, `tsconfig.json`.
+Node >= 22.12. Config: `astro.config.mjs`, `svelte.config.js`, `tsconfig.json`.
 
 ## Run it
 
@@ -55,9 +54,7 @@ public/                   Served as-is (favicons, /img/**).
 
 ### Base-path links: always use `url()`
 
-The site lives under `/india`, and Astro does **not** auto-prefix `href`s or
-asset paths. Route every internal link and every `public/` asset through
-`url()` (`src/lib/url.ts`):
+Route every internal link and every `public/` asset through `url()` (`src/lib/url.ts`):
 
 ```astro
 <a href={url('/about')}>About</a>

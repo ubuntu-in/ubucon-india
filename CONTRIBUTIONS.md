@@ -149,9 +149,9 @@ edition: india-2026
 name: Jane Doe
 title: Senior Developer Advocate
 org: Canonical
-bio: >-
+bio: |
   Two to four sentences. Use "To be announced" if you don't have it yet.
-photo: /img/speakers/jane-doe.jpg   # optional → placeholder avatar
+photo: /img/speakers/jane-doe.jpg   # optional: placeholder avatar
 featured: true
 socials:
   github: https://github.com/janedoe   # any of: x, mastodon, github, site (full URLs)
@@ -206,7 +206,7 @@ optional — omit and the page shows the basic `To be announced` state.
 india-2026:
   venue: Bengaluru Convention Centre
   venueAddress: 123 Community Road, Bengaluru, Karnataka 560001, India
-  mapEmbed: https://www.google.com/maps/embed?pb=…   # Maps → Share → Embed a map → copy src="…" only
+  mapEmbed: https://www.google.com/maps/embed?pb=…   # Maps -> Share -> Embed a map -> copy src="…" only
   gettingThere:
     - { title: By Metro, body: Nearest metro is a 5-minute walk. }
     - { title: By Air,   body: Airport is ~40 km away. }
@@ -231,7 +231,7 @@ Site-wide (not per-edition): the Contact page's channels, socials, and form.
 
 ```yaml
 site:
-  formAccessKey: ""          # Web3Forms key (https://web3forms.com, free). Empty ⇒ form disabled.
+  formAccessKey: ""          # form provider access key
   contacts:
     - { label: General enquiries, email: hello@ubuconindia.org }
     - { label: Sponsorship, email: sponsors@ubuconindia.org }

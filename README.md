@@ -6,11 +6,12 @@ Conference. Static site, one codebase, one entry per edition.
 Built with [Astro](https://astro.build) + [Vanilla
 Framework](https://vanillaframework.io) (Canonical's design system), with a few
 [Svelte](https://svelte.dev) islands for the interactive bits. Deploys to GitHub
-Pages at `https://ubucon.org/india`.
+Pages at `https://in.ubucon.org`.
 
 ## Quick start
 
 Package manager is **bun**.
+Use the same commands for any other package manager you want to use.
 
 ```sh
 bun install
@@ -34,7 +35,7 @@ src/
 public/img/   Images, referenced from YAML by path (e.g. /img/2025/talk.jpg).
 ```
 
-## Two ways to help
+## Contributing to this website
 
 - **Adding or updating event content** (a new edition, speakers, sponsors,
   highlights, photos): you only touch YAML files. See **[CONTRIBUTIONS.md](CONTRIBUTIONS.md)**.

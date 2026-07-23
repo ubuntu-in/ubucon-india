@@ -4,20 +4,15 @@ import svelte from '@astrojs/svelte';
 
 // https://astro.build/config
 export default defineConfig({
-  // Served as a GitHub Pages project page under the org's custom domain.
-  // ubucon.org lives in a separate repo; this repo is /india.
   site: 'https://in.ubucon.org',
   base: '/',
   integrations: [svelte()],
   vite: {
     css: {
       preprocessorOptions: {
-        // Resolve bare `@import "vanilla-framework"`. Vanilla 4 is @import-based;
-        // silence the Dart Sass @import deprecation noise until Vanilla ships @use.
         scss: {
           loadPaths: ['node_modules'],
-          // Vanilla 4 still uses @import, global sass functions and the legacy
-          // if() syntax; all noise from the framework, not our bug.
+          // vanilla still depends on old ways including @import
           silenceDeprecations: ['import', 'global-builtin', 'if-function'],
         },
       },
