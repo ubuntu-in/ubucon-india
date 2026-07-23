@@ -6,8 +6,8 @@ import svelte from '@astrojs/svelte';
 export default defineConfig({
   // Served as a GitHub Pages project page under the org's custom domain.
   // ubucon.org lives in a separate repo; this repo is /india.
-  site: 'https://ubucon.org',
-  base: '/india',
+  site: 'https://in.ubucon.org',
+  base: '/',
   integrations: [svelte()],
   vite: {
     css: {
