@@ -1,0 +1,14 @@
+site:
+  formAccessKey: ""
+  contacts:
+    - label: General enquiries
+      email: hello@in.ubucon.org
+    - label: Talks & speaking
+      email: content@in.ubucon.org
+    - label: Sponsorship
+      email: sponsors@in.ubucon.org
+  socials:
+    mastodon: https://fosstodon.org/@ubuconindia
+    x: https://x.com/UbuntuInOrg
+    linkedin: https://www.linkedin.com/company/ubuntu-in
+    github: https://github.com/ubuntu-in

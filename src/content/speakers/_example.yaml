@@ -1,0 +1,10 @@
+# Template for a curated FEATURED speaker. Copy this to `<firstname-lastname>.yaml`
+# and set `edition` to a real slug (e.g. india-2026). This `_example` entry uses a
+# non-existent edition, so it renders on no page - it only keeps the collection
+# non-empty. Full line-up + schedule come from Indico (see CONTRIBUTIONS.md).
+edition: _example
+name: Example Speaker
+title: Developer Advocate
+org: Organisation
+bio: One short paragraph introducing the speaker.
+featured: true
