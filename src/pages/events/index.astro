@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import Pagination from '../../components/Pagination.astro';
+import { Image } from 'astro:assets';
 import { url } from '../../lib/url';
 import { dateRange } from '../../lib/dates';
 
@@ -47,7 +48,7 @@ const totalPages = Math.max(1, Math.ceil(editions.length / PAGE_SIZE));
               <li>
                 <a class="edition" href={url(`/events/${id}`)}>
                   <span class="edition__media">
-                    {e.cover && <img class="edition__img" src={url(e.cover)} alt="" loading="lazy" />}
+                    {e.cover && <Image class="edition__img" src={e.cover} alt="" loading="lazy" />}
                     <span class="edition__year">{e.edition}</span>
                   </span>
                   <span class="edition__body">

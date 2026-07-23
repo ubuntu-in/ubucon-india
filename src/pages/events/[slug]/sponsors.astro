@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { Image } from 'astro:assets';
 import { url } from '../../../lib/url';
 
 export async function getStaticPaths() {
@@ -83,7 +84,7 @@ const crumbs = [
                     <div class="p-logo-section__item">
                       <a href={s.url} rel="noopener" target="_blank" aria-label={s.name}>
                         {s.logo ? (
-                          <img class="p-logo-section__logo" src={url(s.logo)} alt={s.name} loading="lazy" />
+                          <Image class="p-logo-section__logo" src={s.logo} alt={s.name} loading="lazy" />
                         ) : (
                           <span class="logo__name">{s.name}</span>
                         )}

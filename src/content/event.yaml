@@ -9,7 +9,6 @@ india-2026:
   intro: |
     Join Ubuntu enthusiasts, developers, open source contributors and innovators
     from across India and the world.
-  cover: /img/2026/cover.jpg
   indicoId: 157
   cfpUrl: https://events.canonical.com/event/157/abstracts/
   cfpDeadline: 2026-09-30
@@ -30,7 +29,7 @@ india-2025:
   city: Bengaluru, India
   eyebrow: The Ubuntu India Community Conference of 2025
   tagline: Ubuntu, build together
-  cover: /img/2025/group.jpg
+  cover: ../assets/2025/group.jpg
   indicoId: 136
   intro: |
     The 2025 edition brought together the Ubuntu India community for two days of
@@ -38,11 +37,11 @@ india-2025:
   highlightsUrl: https://photos.app.goo.gl/2i1jvnY9Mcu4n9fR8
   highlights:
     - label: Inspiring talks
-      image: /img/2025/talk.jpg
+      image: ../assets/2025/talk.jpg
     - label: Qualcomm x UbuCon India
-      image: /img/2025/qualcomm.jpg
+      image: ../assets/2025/qualcomm.jpg
     - label: Hands-on workshops
-      image: /img/2025/hands-on.jpg
+      image: ../assets/2025/hands-on.jpg
   stats:
     - n: "~300"
       label: Attendees
@@ -51,13 +50,13 @@ india-2025:
     - n: "38"
       label: Sessions
   gallery:
-    - src: /img/2025/group.jpg
+    - src: ../assets/2025/group.jpg
       alt: Group photo of attendees
-    - src: /img/2025/keynote.jpg
+    - src: ../assets/2025/keynote.jpg
       alt: UbuCon India 2025 keynote hall
-    - src: /img/2025/workshop.jpg
+    - src: ../assets/2025/workshop.jpg
       alt: Hands-on workshop session
-    - src: /img/2025/community.jpg
+    - src: ../assets/2025/community.jpg
       alt: Community networking area
-    - src: /img/2025/bof.jpg
+    - src: ../assets/2025/bof.jpg
       alt: Birds-of-a-feather discussion

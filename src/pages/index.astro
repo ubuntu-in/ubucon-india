@@ -98,7 +98,7 @@ const cfpTypes = [
               target={h.url ? '_blank' : undefined}
             >
               <span class="card__media">
-                {h.image && <img class="card__img" src={url(h.image)} alt="" loading="lazy" />}
+                {h.image && <Image class="card__img" src={h.image} alt="" loading="lazy" />}
                 {h.url && <span class="card__play" aria-hidden="true"><Icon name="play-circle-fill" size={44} /></span>}
               </span>
               <span class="card__label">{h.label}{h.url && <span class="u-off-screen"> - watch the talk</span>}</span>
@@ -132,7 +132,7 @@ const cfpTypes = [
         </div>
         <div class="gallery">
           {lb.gallery.map((g) => (
-            <img class="gallery__img" src={url(g.src)} alt={g.alt} loading="lazy" />
+            <Image class="gallery__img" src={g.src} alt={g.alt} loading="lazy" />
           ))}
         </div>
       </div>
@@ -176,7 +176,7 @@ const cfpTypes = [
             {[...sponsors, ...sponsors].map(({ data: s }, i) => (
               <li class:list={{ 'is-dup': i >= n }} aria-hidden={i >= n ? 'true' : undefined}>
                 <a href={s.url} rel="noopener" target="_blank" aria-label={s.name} tabindex={i >= n ? -1 : undefined}>
-                  {s.logo ? <img src={url(s.logo)} alt={s.name} loading="lazy" /> : <span>{s.name}</span>}
+                  {s.logo ? <Image src={s.logo} alt={s.name} loading="lazy" /> : <span>{s.name}</span>}
                 </a>
               </li>
             ))}
@@ -188,7 +188,7 @@ const cfpTypes = [
             <li>
               <a href={s.url} rel="noopener" target="_blank" aria-label={s.name}>
                 {s.logo
-                  ? <img src={url(s.logo)} alt={s.name} loading="lazy" />
+                  ? <Image src={s.logo} alt={s.name} loading="lazy" />
                   : <span>{s.name}</span>}
               </a>
             </li>

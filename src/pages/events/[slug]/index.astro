@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
 import Icon from '../../../components/Icon.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { Image } from 'astro:assets';
 import { url } from '../../../lib/url';
 import { dateRange, longDate } from '../../../lib/dates';
 import { getIndico } from '../../../lib/indico';
@@ -93,7 +94,7 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
         </div>
       </div>
       <div class="ov-hero__media">
-        {e.cover && <img src={url(e.cover)} alt="" fetchpriority="high" />}
+        {e.cover && <Image src={e.cover} alt="" fetchpriority="high" />}
       </div>
     </div>
   </header>
@@ -130,7 +131,7 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
               <li class:list={['ov-card', { 'ov-card--link': h.url }]}>
                 <Tag class="ov-card__inner" href={h.url} rel={h.url ? 'noopener' : undefined} target={h.url ? '_blank' : undefined}>
                   <span class="ov-card__media">
-                    {h.image && <img src={url(h.image)} alt="" loading="lazy" />}
+                    {h.image && <Image src={h.image} alt="" loading="lazy" />}
                     {h.url && <span class="ov-card__play" aria-hidden="true"><Icon name="play-circle-fill" size={44} /></span>}
                   </span>
                   <span class="ov-card__label">{h.label}{h.url && <span class="u-off-screen"> - watch the talk</span>}</span>
