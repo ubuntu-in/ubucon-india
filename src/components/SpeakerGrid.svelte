@@ -96,13 +96,10 @@
   }
   .grid > li { display: flex; }
 
-  .speaker {
+  .grid > li > .p-card {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 0;
-    border-radius: 0;
-    overflow: hidden;
   }
   .speaker__media {
     position: relative;
@@ -112,7 +109,7 @@
     background: var(--u-aubergine);
     overflow: hidden;
   }
-  .speaker__img { width: 100%; height: 100%; object-fit: cover; }
+  .p-card__image { width: 100%; height: 100%; object-fit: cover; }
   .speaker__initials {
     color: #fff;
     font-size: 2.5rem;
@@ -121,10 +118,7 @@
     opacity: 0.85;
   }
   .speaker__badge { position: absolute; top: 0.5rem; left: 0.5rem; margin: 0; }
-  .speaker__body { display: flex; flex-direction: column; gap: 0.4rem; flex: 1; }
-  .speaker__name { margin: 0; color: var(--u-aubergine); font-size: 1.125rem; }
-  .speaker__role { margin: 0; color: #595959; font-size: 0.9rem; line-height: 1.4; flex: 1; }
-  .speaker__body .p-chip { align-self: flex-start; margin: 0.35rem 0 0; }
+  .p-card__inner { display: flex; flex-direction: column; gap: 0.4rem; flex: 1; }
 
   .pagination { display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: center; margin-top: 2.5rem; }
   .pg {
