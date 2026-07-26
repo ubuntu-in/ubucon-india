@@ -49,18 +49,18 @@
 <ul class="grid">
   {#each shown as s (s.name)}
     <li>
-      <div class="p-card p-card--highlighted u-no-padding speaker">
+      <div class="p-card p-card--highlighted u-no-padding">
         <div class="speaker__media">
           {#if s.featured}<span class="p-status-label--positive speaker__badge">Featured</span>{/if}
           {#if s.photo}
-            <img class="p-card__image speaker__img" src={s.photo} alt={s.name} loading="lazy" />
+            <img class="p-card__image" src={s.photo} alt={s.name} loading="lazy" />
           {:else}
             <span class="speaker__initials" aria-hidden="true">{initials(s.name)}</span>
           {/if}
         </div>
-        <div class="p-card__inner speaker__body">
-          <h3 class="p-card__title speaker__name">{s.name}</h3>
-          {#if s.role}<p class="p-card__content speaker__role">{s.role}</p>{/if}
+        <div class="p-card__inner">
+          <h3 class="p-card__title">{s.name}</h3>
+          {#if s.role}<p class="p-card__content u-text--muted">{s.role}</p>{/if}
         </div>
       </div>
     </li>
