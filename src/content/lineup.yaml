@@ -77,7 +77,7 @@
   name: "Keirthana Thangavelu Srinivasan"
   affiliation: "Canonical"
   track: "Docs & Community"
-  photo: ../assets/2025/speakers/keirthana-ts.png
+  photo: ../assets/2025/speakers/keirthana-ts.jpg
 - id: "kunal-das"
   edition: ["india-2025"]
   name: "Kunal Das"
@@ -92,7 +92,7 @@
   edition: ["india-2025"]
   name: "Manjunath Janardhan"
   track: "AI & ML"
-  photo: ../assets/2025/speakers/manjunath-janardhan.png
+  photo: ../assets/2025/speakers/manjunath-janardhan.jpg
 - id: "n-nishchit"
   edition: ["india-2025"]
   name: "N Nishchit"
@@ -135,7 +135,7 @@
   name: "Saquib Akhtar"
   affiliation: "Linux SME & IDM L3 Lead @ NOKIA"
   track: "Cloud & Infrastructure"
-  photo: ../assets/2025/speakers/saquib-akhtar.jpeg
+  photo: ../assets/2025/speakers/saquib-akhtar.jpg
 - id: "saumili-dutta"
   edition: ["india-2025"]
   name: "Saumili Dutta"
@@ -188,13 +188,13 @@
   edition: ["india-2025"]
   name: "Tushar Gupta"
   track: "DevOps & Security"
-  photo: ../assets/2025/speakers/tushar-gupta.jpeg
+  photo: ../assets/2025/speakers/tushar-gupta.jpg
 - id: "utkarsh-maurya"
   edition: ["india-2025"]
   name: "Utkarsh Maurya"
   affiliation: "National Institute of Technology, Hamirpur, Himachal Pradesh, India"
   track: "Embedded Systems & IoT"
-  photo: ../assets/2025/speakers/utkarsh.jpeg
+  photo: ../assets/2025/speakers/utkarsh.jpg
 - id: "varad-patil"
   edition: ["india-2025"]
   name: "Varad Patil"
