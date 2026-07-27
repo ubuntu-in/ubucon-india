@@ -25,13 +25,14 @@ const upcoming =
     .find((ev) => ev.data.endDate >= now) ?? null;
 
 const TIER_META = {
-  diamond: { label: "Diamond", sub: "Lead partners", size: "lg" },
-  platinum: { label: "Platinum", sub: "Presenting partners", size: "lg" },
-  gold: { label: "Gold", sub: "Headline sponsors", size: "md" },
-  silver: { label: "Silver", sub: "Supporting sponsors", size: "sm" },
-  bronze: { label: "Bronze", sub: "Supporting sponsors", size: "sm" },
+  diamond: { label: "Diamond Sponsors", sub: "Lead Partners", size: "lg" },
+  platinum: { label: "Platinum Sponsors", sub: "Presenting Partners", size: "lg" },
+  gold: { label: "Gold Sponsors", sub: "Headline Sponsors", size: "md" },
+  venue: { label: "Venue Partner", sub: "Host Venue", size: "md" },
+  silver: { label: "Silver Sponsors", sub: "Supporting Sponsors", size: "sm" },
+  bronze: { label: "Bronze Sponsors", sub: "Supporting Sponsors", size: "sm" },
   supporter: { label: "Supporters", sub: "Friends of UbuCon", size: "xs" },
-  community: { label: "Community", sub: "Partners & media", size: "xs" },
+  community: { label: "Community Partners", sub: "Partners & Media", size: "xs" },
 } as const;
 const ORDER = Object.keys(TIER_META) as (keyof typeof TIER_META)[];
 
@@ -50,50 +51,60 @@ const crumbs = [
 ];
 ---
 
-<Base title={`Sponsors · ${e.name}`} description={`Sponsors of ${e.name}.`}>
-  <section class="p-strip">
+<Base title={`Sponsors · ${e.name}`} description={`Sponsors and partners of ${e.name}.`}>
+  <!-- ─────────── Hero & Intro ─────────── -->
+  <section class="p-strip is-shallow">
     <div class="u-container">
       <Breadcrumbs items={crumbs} />
-      <h1 class="h-xl u-aubergine">Sponsors</h1>
-      <p class="body sponsors-lede">
-        {e.name} is powered by organisations that believe in open source. Thank you
-        to the sponsors making it happen.
-      </p>
+      <div class="sponsors-hero">
+        <span class="sponsors-hero__eyebrow">{e.name}</span>
+        <h1 class="h-xl u-aubergine sponsors-hero__title">Our Sponsors & Partners</h1>
+        <p class="body sponsors-hero__lede">
+          {e.name} is powered by visionary organisations that support open source.
+          Thank you to the partners making this conference possible.
+        </p>
 
-      {
-        !past && (
-          <div class="p-notification--information is-inline sponsors-banner">
-            <div class="p-notification__content">
-              <span class="p-notification__title">
-                Sponsorship spots are limited.
-              </span>
-              &nbsp;
-              <p class="p-notification__message">Secure your tier early.</p>
+        {
+          !past && (
+            <div class="p-notification--information is-inline sponsors-hero__banner">
+              <div class="p-notification__content">
+                <span class="p-notification__title">Sponsorship Spots Open</span>
+                &nbsp;
+                <p class="p-notification__message">
+                  Reach decision-makers and developers. <a href={url("/contact")}>Get in touch</a> to secure your tier.
+                </p>
+              </div>
             </div>
-          </div>
-        )
-      }
+          )
+        }
+      </div>
+    </div>
+  </section>
 
+  <!-- ─────────── Sponsors Grid Section ─────────── -->
+  <section class="p-strip">
+    <div class="u-container">
       {
         groups.length === 0 ? (
-          <p class="body empty">
-            Sponsors will be announced soon. Interested in supporting UbuCon
-            India?
-            <a href={url("/contact")}>Get in touch.</a>
-          </p>
+          <div class="u-align--center">
+            <p class="body empty">
+              Sponsors for {e.name} will be announced soon. Interested in supporting the conference?
+            </p>
+            <a class="p-button--positive" href={url("/contact")}>Become a Sponsor</a>
+          </div>
         ) : (
-          <div class="tiers">
+          <div class="tiers-wrap">
             {groups.map((g) => (
-              <div class="tier">
-                <div class="tier__head">
-                  <span class="tier__bar" aria-hidden="true" />
-                  <h2 class="tier__name">{TIER_META[g.tier].label}</h2>
-                  <span class="tier__sub">{TIER_META[g.tier].sub}</span>
+              <div class="tier-section">
+                <div class="tier-header">
+                  <span class="tier-sub">{TIER_META[g.tier].sub}</span>
+                  <h2 class="tier-name">{TIER_META[g.tier].label}</h2>
+                  <span class="tier-bar" aria-hidden="true" />
                 </div>
                 <div
                   class:list={[
                     "p-logo-section",
-                    "tier__logos",
+                    "sponsors-grid",
                     `logos--${TIER_META[g.tier].size}`,
                   ]}
                 >
@@ -126,23 +137,67 @@ const crumbs = [
           </div>
         )
       }
+    </div>
+  </section>
 
+  <!-- ─────────── Why Partner With Us (Vanilla Grid Cards) ─────────── -->
+  {
+    !past && (
+      <section class="p-strip">
+        <div class="u-container">
+          <div class="sponsors-benefits__head">
+            <span class="eyebrow">Why Partner With Us</span>
+            <h2 class="h-xl u-aubergine">Connect with the Ubuntu Community</h2>
+            <p class="body sponsors-benefits__lede">
+              Sponsoring UbuCon India gives your brand direct exposure to Linux professionals, open-source contributors, and engineering leaders.
+            </p>
+          </div>
+
+          <div class="sponsors-benefits__grid">
+            <div class="p-card sponsor-benefit-card">
+              <div class="p-card__content">
+                <h3 class="u-aubergine">Brand Visibility</h3>
+                <p>Position your organisation at the forefront of open source innovation across our website, stage, and event media.</p>
+              </div>
+            </div>
+
+            <div class="p-card sponsor-benefit-card">
+              <div class="p-card__content">
+                <h3 class="u-aubergine">Talent & Recruitment</h3>
+                <p>Interact directly with passionate developers, DevOps engineers, system architects, and open source talent.</p>
+              </div>
+            </div>
+
+            <div class="p-card sponsor-benefit-card">
+              <div class="p-card__content">
+                <h3 class="u-aubergine">Community Leadership</h3>
+                <p>Demonstrate your commitment to Linux ecosystem growth and support regional open source initiatives in India.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ─────────── Call To Action Panel ─────────── -->
+  <section class="p-strip is-shallow">
+    <div class="u-container">
       {
         upcoming ? (
-          /* Become a sponsor CTA - always sells the latest (upcoming) event. */
           <div class="sponsor-cta">
+            <span class="sponsor-cta__eyebrow">Sponsorship Prospectus</span>
+            <h2 class="sponsor-cta__title">
+              Want to sponsor {upcoming.data.name}?
+            </h2>
             <div class="sponsor-cta__text">
-              <h2 class="sponsor-cta__title">
-                Want to sponsor {upcoming.data.name}?
-              </h2>
               <p>
-                Reach a passionate open-source audience. Grab a tier and support
-                the community.
+                Reach a passionate open-source audience. Download our prospectus or contact us to secure your tier.
               </p>
             </div>
             <div class="sponsor-cta__actions">
               <a class="p-button--positive" href={url("/contact")}>
-                Become a sponsor
+                Become a Sponsor
               </a>
               {upcoming.data.prospectusUrl && (
                 <a
@@ -151,25 +206,25 @@ const crumbs = [
                   rel="noopener"
                   target="_blank"
                 >
-                  Download prospectus
+                  Download Prospectus
                 </a>
               )}
             </div>
           </div>
         ) : (
-          /* No upcoming edition to sponsor - invite a community donation instead. */
           <div class="sponsor-cta">
+            <span class="sponsor-cta__eyebrow">Community Support</span>
+            <h2 class="sponsor-cta__title">Support the Community</h2>
             <div class="sponsor-cta__text">
-              <h2 class="sponsor-cta__title">Support the community</h2>
               <p>
                 No edition is on the calendar yet. UbuCon India runs on
-                volunteers - a donation keeps the community going between
+                volunteers — a donation keeps the community going between
                 events.
               </p>
             </div>
             <div class="sponsor-cta__actions">
               <a class="p-button--positive" href={url("/contact")}>
-                Donate to the community
+                Donate to the Community
               </a>
             </div>
           </div>
@@ -179,135 +234,6 @@ const crumbs = [
   </section>
 </Base>
 
-<style>
-  .sponsors-lede {
-    max-width: 42rem;
-  }
-  .sponsors-banner {
-    margin: 1.5rem 0;
-  }
-  .empty {
-    margin-top: 1.5rem;
-  }
-  .empty a {
-    color: var(--u-orange);
-    font-weight: 600;
-  }
 
-  .tiers {
-    display: grid;
-    gap: 2.5rem;
-    margin-top: 2rem;
-  }
-  .tier__head {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-  }
-  .tier__bar {
-    width: 6px;
-    height: 24px;
-    background: var(--u-orange);
-    flex: none;
-  }
-  .tier__name {
-    font-size: 1.375rem;
-    font-weight: 700;
-    color: var(--u-aubergine);
-    margin: 0;
-  }
-  .tier__sub {
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: #666;
-  }
 
-  /* Logos have wildly different aspect ratios (Qualcomm ~5:1 vs CDAC ~1.4:1),
-     so height-only normalising blows the wide ones up. Instead give every logo
-     an equal bounding BOX per tier and contain-fit inside it - equal visual
-     footprint, aspect preserved. No card background (strict vanilla). */
-  .tier__logos {
-    --box-w: 200px;
-    --box-h: 76px;
-  }
-  .logos--md {
-    --box-w: 170px;
-    --box-h: 64px;
-  }
-  .logos--sm {
-    --box-w: 150px;
-    --box-h: 54px;
-  }
-  .logos--xs {
-    --box-w: 120px;
-    --box-h: 44px;
-  }
-  .tier__logos :global(.p-logo-section__items) {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 1rem 2.5rem;
-  }
-  .tier__logos :global(.p-logo-section__item) {
-    margin: 0;
-  }
-  .tier__logos a {
-    display: block;
-    text-decoration: none;
-  }
-  .tier__logos :global(.p-logo-section__logo) {
-    width: var(--box-w);
-    height: var(--box-h);
-    max-width: 100%;
-    object-fit: contain;
-    object-position: left center;
-  }
-  .logo__name {
-    font-weight: 500;
-    color: #555;
-  }
 
-  .sponsor-cta {
-    margin-top: 3rem;
-    background: var(--u-pink);
-    padding: 2rem 3rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem 2rem;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .sponsor-cta__title {
-    font-size: 1.625rem;
-    font-weight: 700;
-    color: var(--u-aubergine);
-    margin: 0 0 0.5rem;
-  }
-  .sponsor-cta__text p {
-    color: #666;
-    margin: 0;
-    max-width: 48ch;
-  }
-  .sponsor-cta__actions {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
-  .sponsor-cta__actions .p-button--positive,
-  .sponsor-cta__actions .p-button {
-    margin: 0;
-    text-align: center;
-  }
-
-  @media (max-width: 620px) {
-    .sponsor-cta {
-      padding: 1.5rem;
-    }
-    .sponsor-cta__actions {
-      width: 100%;
-    }
-  }
-</style>

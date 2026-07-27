@@ -81,3 +81,302 @@
 @media (max-width: 600px) {
   .u-container { padding-inline: 1rem; }
 }
+
+// Sponsor Page & Tier styling (Canonical Vanilla Framework extensions)
+.sponsors-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-block: 0.5rem 1.5rem;
+
+  &__eyebrow {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--u-orange-dark);
+    margin-bottom: 0.5rem;
+  }
+  &__title {
+    margin-bottom: 0.75rem;
+  }
+  &__lede {
+    max-width: 44rem;
+    margin: 0 auto;
+    text-align: center;
+    color: #444;
+    font-size: 1.15rem;
+    line-height: 1.6;
+  }
+  &__banner {
+    margin-top: 1.5rem;
+  }
+}
+
+.sponsors-benefits {
+  &__head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  &__lede {
+    max-width: 40rem;
+    margin: 0 auto;
+    text-align: center;
+    color: #555;
+  }
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+}
+
+.sponsor-benefit-card {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-top: 3px solid var(--u-orange);
+  border-radius: 4px;
+  padding: 1.75rem 1.5rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  }
+
+  h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  p {
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    margin: 0;
+  }
+}
+
+.tiers-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  padding-block: 1rem;
+  align-items: center;
+  width: 100%;
+}
+
+.tier-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 2rem 1.5rem;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.tier-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 1.75rem;
+
+  .tier-sub {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--u-orange-dark);
+    margin-bottom: 0.25rem;
+  }
+
+  .tier-name {
+    font-size: 1.625rem;
+    font-weight: 800;
+    color: var(--u-aubergine);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .tier-bar {
+    width: 36px;
+    height: 3px;
+    background: var(--u-orange);
+    margin-top: 0.6rem;
+    border-radius: 2px;
+  }
+}
+
+/* Vanilla p-logo-section centering & logo sizing */
+.p-logo-section.sponsors-grid {
+  width: 100%;
+
+  .p-logo-section__items {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem 2.5rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .p-logo-section__item {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.25rem;
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    text-decoration: none;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+
+    &:hover {
+      background: #ffffff;
+      transform: translateY(-2px);
+      border-color: var(--u-orange);
+      box-shadow: 0 6px 16px rgba(233, 84, 32, 0.12);
+    }
+  }
+
+  &.logos--lg a {
+    width: 260px;
+    height: 105px;
+    padding: 1rem 1.5rem;
+  }
+  &.logos--md a {
+    width: 210px;
+    height: 85px;
+    padding: 0.875rem 1.25rem;
+  }
+  &.logos--sm a {
+    width: 175px;
+    height: 72px;
+    padding: 0.75rem 1rem;
+  }
+  &.logos--xs a {
+    width: 145px;
+    height: 58px;
+    padding: 0.5rem 0.875rem;
+  }
+
+  .p-logo-section__logo {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .logo__name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--u-aubergine);
+    text-align: center;
+    line-height: 1.25;
+  }
+}
+
+.sponsor-cta {
+  margin-top: 2rem;
+  background: var(--u-pink);
+  border: 1px solid rgba(233, 84, 32, 0.2);
+  border-radius: 12px;
+  padding: 2.75rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.25rem;
+  max-width: 52rem;
+  margin-inline: auto;
+
+  &__eyebrow {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--u-orange-dark);
+  }
+
+  .sponsor-cta__title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--u-aubergine);
+    margin: 0;
+  }
+  .sponsor-cta__text p {
+    color: #444;
+    margin: 0;
+    max-width: 48ch;
+    font-size: 1.05rem;
+    line-height: 1.55;
+  }
+  .sponsor-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+
+    .p-button--positive,
+    .p-button {
+      margin: 0;
+      min-width: 180px;
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .sponsors-benefits__grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .p-logo-section.sponsors-grid {
+    .p-logo-section__items {
+      gap: 1rem;
+    }
+    &.logos--lg a { width: calc(50% - 0.5rem); min-width: 140px; height: 85px; }
+    &.logos--md a { width: calc(50% - 0.5rem); min-width: 130px; height: 75px; }
+    &.logos--sm a { width: calc(50% - 0.5rem); min-width: 120px; height: 65px; }
+    &.logos--xs a { width: calc(50% - 0.5rem); min-width: 110px; height: 55px; }
+  }
+  .sponsor-cta {
+    padding: 2rem 1.25rem;
+    .sponsor-cta__actions {
+      flex-direction: column;
+      width: 100%;
+      .p-button--positive,
+      .p-button { width: 100%; }
+    }
+  }
+}
+
+

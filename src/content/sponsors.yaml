@@ -46,3 +46,12 @@
   tier: community
   logo: ../assets/sponsors/konfhub.svg
   url: https://konfhub.com
+
+- id: bmsce
+  editions: [india-2026]
+  name: BMS College of Engineering
+  tier: venue
+  logo: ../assets/sponsors/bmsce.jpg
+  url: https://bmsce.ac.in
+
+
