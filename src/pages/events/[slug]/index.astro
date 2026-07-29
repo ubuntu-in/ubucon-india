@@ -54,6 +54,9 @@ const cfpOpen = !past && e.cfpUrl;
 
 const ticketActive = !past && !!e.ticketUrl;
 const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
+
+const numFacts = 2 + (venueSet ? 1 : 0) + (past && e.stats[0] ? 1 : 0);
+const factCol = Math.floor(12 / numFacts);
 ---
 
 <Base title={e.name} description={e.intro}>
@@ -145,41 +148,43 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
   </header>
 
   <!-- ─────────── Quick facts ─────────── -->
-  <div class="ov-facts-band">
-    <div class="u-container ov-facts-band__inner">
-      <div class="ov-fact">
-        <strong>{dateRange(e.startDate, e.endDate)}</strong><span>Dates</span>
+  <div class="p-strip--light is-shallow">
+    <div class="u-container">
+      <div class="row">
+        <div class={`col-${factCol} ov-fact`}>
+          <strong>{dateRange(e.startDate, e.endDate)}</strong><span>Dates</span>
+        </div>
+        <div class={`col-${factCol} ov-fact`}>
+          <strong>{e.city.replace(/,.*$/, "")}</strong><span>Location</span>
+        </div>
+        {
+          venueSet && (
+            <div class={`col-${factCol} ov-fact`}>
+              <strong>{e.venue}</strong>
+              <a class="p-button--link" href={sub("venue")} rel="noopener">
+                <span>Venue</span>
+                <i class="p-icon--chevron-right" />
+              </a>
+            </div>
+          )
+        }
+        {
+          past && e.stats[0] && (
+            <div class={`col-${factCol} ov-fact`}>
+              <>
+                <strong>{e.stats[0].n}</strong>
+                <span>{e.stats[0].label}</span>
+              </>
+            </div>
+          )
+        }
       </div>
-      <div class="ov-fact">
-        <strong>{e.city.replace(/,.*$/, "")}</strong><span>Location</span>
-      </div>
-      {
-        venueSet && (
-          <div class="ov-fact">
-            <strong>{e.venue}</strong>
-            <a class="p-button--link" href={sub("venue")} rel="noopener">
-              <span>Venue</span>
-              <i class="p-icon--chevron-right" />
-            </a>
-          </div>
-        )
-      }
-      {
-        past && e.stats[0] && (
-          <div class="ov-fact">
-            <>
-              <strong>{e.stats[0].n}</strong>
-              <span>{e.stats[0].label}</span>
-            </>
-          </div>
-        )
-      }
     </div>
   </div>
 
   <!-- ─────────── About ─────────── -->
   <section class="p-strip is-shallow">
-    <div class="u-container ov-narrow">
+    <div class="u-container">
       <h2 class="ov-h2">About this edition</h2>
       <p class="ov-body">{e.intro}</p>
       <h3 class="ov-h3">Our mission</h3>
@@ -342,9 +347,6 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
   .ov-crumbs {
     padding-block: 1.5rem 0;
   }
-  .ov-narrow {
-    max-width: 60rem;
-  }
 
   /* Hero */
   .ov-hero {
@@ -424,16 +426,6 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
   }
 
   /* Quick facts band */
-  .ov-facts-band {
-    background: #f6f6f6;
-    border-block: 1px solid var(--u-placeholder);
-  }
-  .ov-facts-band__inner {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem 4rem;
-    padding-block: 1.75rem;
-  }
   .ov-fact {
     display: grid;
     gap: 0.25rem;
@@ -456,13 +448,13 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
     font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 700;
     color: var(--u-aubergine);
-    margin: 0 0 1rem;
+    margin: 0 0 0.5rem;
   }
   .ov-h3 {
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--u-aubergine);
-    margin: 1.5rem 0 0.75rem;
+    margin: 1rem 0 0.5rem;
   }
   .ov-body {
     font-size: 1.125rem;
