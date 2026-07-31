@@ -59,7 +59,7 @@
           {/if}
         </div>
         <div class="p-card__inner">
-          <h3 class="p-card__title">{s.name}</h3>
+          <h3>{s.name}</h3>
           {#if s.role}<p class="p-card__content u-text--muted">{s.role}</p>{/if}
         </div>
       </div>
@@ -109,7 +109,6 @@
     background: var(--u-aubergine);
     overflow: hidden;
   }
-  .p-card__image { width: 100%; height: 100%; object-fit: cover; }
   .speaker__initials {
     color: #fff;
     font-size: 2.5rem;
