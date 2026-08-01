@@ -348,7 +348,7 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: $breakpoint-medium) {
   .sponsors-benefits__grid {
     grid-template-columns: 1fr;
     gap: 1rem;
