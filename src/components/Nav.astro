@@ -31,6 +31,28 @@ const isActive = (href: string) =>
     width: 1.5rem;
     height: 1.5rem;
   }
+
+  #navigation .p-navigation__item.is-selected::before,
+  #navigation .p-navigation__item.is-selected::after,
+  #navigation .p-navigation__item.is-selected .p-navigation__link::before,
+  #navigation .p-navigation__item.is-selected .p-navigation__link::after {
+    display: none !important;
+  }
+  
+  #navigation .p-navigation__item {
+    position: relative !important;
+  }
+
+  .nav-active-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 1rem;
+    right: 1rem;
+    height: 3px;
+    background-color: #e95420;
+    border-radius: 3px 3px 0 0;
+    z-index: 10;
+  }
 </style>
 
 <header id="navigation" class="p-navigation is-dark is-sticky">
@@ -88,6 +110,9 @@ const isActive = (href: string) =>
               >
                 {l.label}
               </a>
+              {isActive(l.href) && (
+                <div class="nav-active-indicator" transition:name="nav-active-indicator"></div>
+              )}
             </li>
           ))
         }

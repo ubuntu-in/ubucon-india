@@ -3,6 +3,7 @@ import "../styles/global.scss";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import { url } from "../lib/url";
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
   title?: string;
@@ -52,6 +53,7 @@ const socialCard = ogImage ?? (edition ? `/og-${edition}.png` : "/og-evergreen.p
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="google-site-verification" content="rIfbKP-K9fzW33Mb_DHIP3MfXLbAoZ7LlU3JF9lJKuc" />
     <title>{fullTitle}</title>
+    <ClientRouter />
   </head>
   <body>
     <a href="#main" class="u-off-screen">Skip to main content</a>
