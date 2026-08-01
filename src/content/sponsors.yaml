@@ -19,6 +19,13 @@
   logo: ../assets/sponsors/qualcomm.svg
   url: https://qualcomm.com
 
+- id: bmsce
+  editions: [india-2026]
+  name: BMS College of Engineering
+  tier: venue
+  logo: ../assets/sponsors/bmsce.jpg
+  url: https://bmsce.ac.in
+
 - id: onlyoffice
   editions: [asia-2024]
   name: ONLYOFFICE

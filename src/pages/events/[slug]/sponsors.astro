@@ -30,6 +30,7 @@ const TIER_META = {
   gold: { label: "Gold", sub: "Headline sponsors", size: "md" },
   silver: { label: "Silver", sub: "Supporting sponsors", size: "sm" },
   bronze: { label: "Bronze", sub: "Supporting sponsors", size: "sm" },
+  venue: { label: "Venue Partner", sub: "Host & venue partner", size: "md" },
   supporter: { label: "Supporters", sub: "Friends of UbuCon", size: "xs" },
   community: { label: "Community", sub: "Partners & media", size: "xs" },
 } as const;
@@ -50,14 +51,14 @@ const crumbs = [
 ];
 ---
 
-<Base title={`Sponsors · ${e.name}`} description={`Sponsors of ${e.name}.`}>
+<Base title={`Sponsors · ${e.name}`} description={`Sponsors and Partners of ${e.name}.`}>
   <section class="p-strip">
     <div class="u-container">
       <Breadcrumbs items={crumbs} />
-      <h1 class="h-xl u-aubergine">Sponsors</h1>
+      <h1 class="h-xl u-aubergine">Sponsors & Partners</h1>
       <p class="body sponsors-lede">
         {e.name} is powered by organisations that believe in open source. Thank you
-        to the sponsors making it happen.
+        to the sponsors and partners making it happen.
       </p>
 
       {
@@ -74,54 +75,86 @@ const crumbs = [
         )
       }
 
+      <!-- Why Partner With Us (Vanilla Grid Cards) -->
+      {
+        !past && (
+          <div class="sponsors-benefits">
+            <div class="sponsors-benefits__head">
+              <p class="p-heading--muted">Why Partner With Us</p>
+              <h2 class="h-xl u-aubergine">Connect with the Ubuntu Community</h2>
+              <p class="body sponsors-benefits__lede">
+                Sponsoring UbuCon India gives your brand direct exposure to Linux professionals, open-source contributors, and engineering leaders.
+              </p>
+            </div>
+            <div class="sponsors-benefits__grid">
+              <div class="p-card--highlighted">
+                <h3 class="p-heading--4">Direct Access</h3>
+                <p class="p-card__content">Engage with developers, sysadmins, and decision-makers in the Linux ecosystem.</p>
+              </div>
+              <div class="p-card--highlighted">
+                <h3 class="p-heading--4">Brand Visibility</h3>
+                <p class="p-card__content">Promote your products and brand across our event platforms, streams, and swag.</p>
+              </div>
+              <div class="p-card--highlighted">
+                <h3 class="p-heading--4">Talent Recruitment</h3>
+                <p class="p-card__content">Connect with talented open-source developers and engineers across India.</p>
+              </div>
+            </div>
+          </div>
+        )
+      }
+
       {
         groups.length === 0 ? (
           <p class="body empty">
             Sponsors will be announced soon. Interested in supporting UbuCon
-            India?
+            India?{" "}
             <a href={url("/contact")}>Get in touch.</a>
           </p>
         ) : (
-          <div class="tiers">
-            {groups.map((g) => (
-              <div class="tier">
-                <div class="tier__head">
-                  <span class="tier__bar" aria-hidden="true" />
-                  <h2 class="tier__name">{TIER_META[g.tier].label}</h2>
-                  <span class="tier__sub">{TIER_META[g.tier].sub}</span>
-                </div>
-                <div
-                  class:list={[
-                    "p-logo-section",
-                    "tier__logos",
-                    `logos--${TIER_META[g.tier].size}`,
-                  ]}
-                >
-                  <div class="p-logo-section__items">
-                    {g.items.map(({ data: s }) => (
-                      <div class="p-logo-section__item">
-                        <a
-                          href={s.url}
-                          rel="noopener"
-                          target="_blank"
-                          aria-label={s.name}
-                        >
-                          {s.logo ? (
-                            <Image
-                              class="p-logo-section__logo"
-                              src={s.logo}
-                              alt={s.name}
-                              loading="lazy"
-                            />
-                          ) : (
-                            <span class="logo__name">{s.name}</span>
-                          )}
-                        </a>
-                      </div>
-                    ))}
+          <div class="tier-sections">
+            {groups.map((g, idx) => (
+              <>
+                {idx > 0 && <hr class="p-rule" />}
+                <div class="tier-section">
+                  <div class="tier__head">
+                    <h2 class="h-md tier__name">{TIER_META[g.tier].label}</h2>
+                    <span class="p-heading--muted tier__sub">{TIER_META[g.tier].sub}</span>
+                  </div>
+                  <div
+                    class:list={[
+                      "p-logo-section",
+                      "tier__logos",
+                      `logos--${TIER_META[g.tier].size}`,
+                    ]}
+                  >
+                    <div class="p-logo-section__items">
+                      {g.items.map(({ data: s }) => (
+                        <div class="p-logo-section__item">
+                          <a
+                            class="p-logo-section__link"
+                            href={s.url}
+                            rel="noopener"
+                            target="_blank"
+                            aria-label={s.name}
+                          >
+                            {s.logo ? (
+                              <Image
+                                class="p-logo-section__logo"
+                                src={s.logo}
+                                alt={s.name}
+                                loading="lazy"
+                              />
+                            ) : (
+                              <span class="logo__name">{s.name}</span>
+                            )}
+                          </a>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </>
             ))}
           </div>
         )
@@ -194,41 +227,44 @@ const crumbs = [
     font-weight: 600;
   }
 
-  .tiers {
+  /* Benefits section */
+  .sponsors-benefits {
+    margin: 2.5rem 0;
+  }
+  .sponsors-benefits__head {
+    margin-bottom: 1.5rem;
+  }
+  .sponsors-benefits__lede {
+    max-width: 44rem;
+  }
+  .sponsors-benefits__grid {
     display: grid;
-    gap: 2.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  /* Tiers layout: flat separated by p-rule */
+  .tier-sections {
     margin-top: 2rem;
+  }
+  .tier-section {
+    padding-block: 1.5rem;
   }
   .tier__head {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
+    align-items: baseline;
+    gap: 1rem;
     margin-bottom: 1rem;
   }
-  .tier__bar {
-    width: 6px;
-    height: 24px;
-    background: var(--u-orange);
-    flex: none;
-  }
   .tier__name {
-    font-size: 1.375rem;
-    font-weight: 700;
-    color: var(--u-aubergine);
     margin: 0;
   }
   .tier__sub {
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: #666;
+    margin: 0;
   }
 
-  /* Logos have wildly different aspect ratios (Qualcomm ~5:1 vs CDAC ~1.4:1),
-     so height-only normalising blows the wide ones up. Instead give every logo
-     an equal bounding BOX per tier and contain-fit inside it - equal visual
-     footprint, aspect preserved. No card background (strict vanilla). */
+  /* Logos: bounding box per tier size, flat vanilla styling (no cards, no hover-lift) */
   .tier__logos {
     --box-w: 200px;
     --box-h: 76px;
@@ -266,13 +302,15 @@ const crumbs = [
     object-position: left center;
   }
   .logo__name {
-    font-weight: 500;
-    color: #555;
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: var(--u-aubergine);
   }
 
   .sponsor-cta {
     margin-top: 3rem;
     background: var(--u-pink);
+    border-radius: 2px;
     padding: 2rem 3rem;
     display: flex;
     flex-wrap: wrap;
@@ -287,7 +325,7 @@ const crumbs = [
     margin: 0 0 0.5rem;
   }
   .sponsor-cta__text p {
-    color: #666;
+    color: var(--u-aubergine);
     margin: 0;
     max-width: 48ch;
   }
@@ -302,6 +340,11 @@ const crumbs = [
     text-align: center;
   }
 
+  @media (max-width: 875px) {
+    .sponsors-benefits__grid {
+      grid-template-columns: 1fr;
+    }
+  }
   @media (max-width: 620px) {
     .sponsor-cta {
       padding: 1.5rem;
