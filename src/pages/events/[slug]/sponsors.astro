@@ -75,35 +75,6 @@ const crumbs = [
         )
       }
 
-      <!-- Why Partner With Us (Vanilla Grid Cards) -->
-      {
-        !past && (
-          <div class="sponsors-benefits">
-            <div class="sponsors-benefits__head">
-              <p class="p-heading--muted">Why Partner With Us</p>
-              <h2 class="h-xl u-aubergine">Connect with the Ubuntu Community</h2>
-              <p class="body sponsors-benefits__lede">
-                Sponsoring UbuCon India gives your brand direct exposure to Linux professionals, open-source contributors, and engineering leaders.
-              </p>
-            </div>
-            <div class="sponsors-benefits__grid">
-              <div class="p-card--highlighted">
-                <h3 class="p-heading--4">Direct Access</h3>
-                <p class="p-card__content">Engage with developers, sysadmins, and decision-makers in the Linux ecosystem.</p>
-              </div>
-              <div class="p-card--highlighted">
-                <h3 class="p-heading--4">Brand Visibility</h3>
-                <p class="p-card__content">Promote your products and brand across our event platforms, streams, and swag.</p>
-              </div>
-              <div class="p-card--highlighted">
-                <h3 class="p-heading--4">Talent Recruitment</h3>
-                <p class="p-card__content">Connect with talented open-source developers and engineers across India.</p>
-              </div>
-            </div>
-          </div>
-        )
-      }
-
       {
         groups.length === 0 ? (
           <p class="body empty">
@@ -227,23 +198,6 @@ const crumbs = [
     font-weight: 600;
   }
 
-  /* Benefits section */
-  .sponsors-benefits {
-    margin: 2.5rem 0;
-  }
-  .sponsors-benefits__head {
-    margin-bottom: 1.5rem;
-  }
-  .sponsors-benefits__lede {
-    max-width: 44rem;
-  }
-  .sponsors-benefits__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-  }
-
   /* Tiers layout: flat separated by p-rule */
   .tier-sections {
     margin-top: 2rem;
@@ -340,11 +294,6 @@ const crumbs = [
     text-align: center;
   }
 
-  @media (max-width: 875px) {
-    .sponsors-benefits__grid {
-      grid-template-columns: 1fr;
-    }
-  }
   @media (max-width: 620px) {
     .sponsor-cta {
       padding: 1.5rem;
