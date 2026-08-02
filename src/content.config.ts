@@ -74,13 +74,20 @@ const volunteers = defineCollection({
 
 const sponsors = defineCollection({
   loader: file('src/content/sponsors.yaml'),
-  schema: ({ image }) => z.object({
-    editions: z.array(z.string()).nonempty(),
-    name: z.string(),
-    tier: z.enum(['diamond', 'gold', 'silver', 'bronze', 'supporter', 'community']),
-    logo: image().optional(),
-    url: z.url(),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      editions: z
+        .record(
+          z.string(),
+          z.enum(['diamond', 'gold', 'silver', 'bronze', 'supporter', 'community'])
+        )
+        .refine((editions) => Object.keys(editions).length > 0, {
+          message: 'A sponsor must have at least one edition tier',
+        }),
+      name: z.string(),
+      logo: image().optional(),
+      url: z.url(),
+    }),
 });
 
 const supporters = defineCollection({
