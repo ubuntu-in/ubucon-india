@@ -6,6 +6,7 @@ india-2026:
   city: Bengaluru, India
   eyebrow: The Ubuntu India Community Conference of 2026
   tagline: Together we build, a future open for all
+  cover: ../assets/2026/cover.png
   intro: |
     Join Ubuntu enthusiasts, developers, open source contributors and innovators
     from across India and the world.
