@@ -35,12 +35,10 @@ const TIER_META = {
 } as const;
 const ORDER = Object.keys(TIER_META) as (keyof typeof TIER_META)[];
 
-const sponsors = await getCollection("sponsors", ({ data }) =>
-  data.editions.includes(slug),
-);
+const sponsors = await getCollection("sponsors", ({ data }) => slug in data.editions);
 const groups = ORDER.map((tier) => ({
   tier,
-  items: sponsors.filter((s) => s.data.tier === tier),
+  items: sponsors.filter((s) => s.data.editions[slug] === tier),
 })).filter((g) => g.items.length > 0);
 
 const crumbs = [
