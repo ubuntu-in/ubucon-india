@@ -1,0 +1,170 @@
+---
+/**
+ * KonfHubWidget
+ *
+ * Renders a Vanilla Framework–styled button that opens the KonfHub event
+ * registration popup. The KonfHub widget script is injected into an
+ * off-screen container on the client only; SSR receives no third-party markup.
+ *
+ * Usage:
+ *   <KonfHubWidget buttonId="btn_557cbe605984" />
+ *   <KonfHubWidget buttonId="btn_62c45f55e81e" label="Register now" buttonClass="p-button--positive" />
+ */
+
+interface Props {
+  /** KonfHub `button_id` attribute value (e.g. "btn_557cbe605984") */
+  buttonId: string;
+  /** Visible button label */
+  label?: string;
+  /** Vanilla Framework button class applied to the trigger element */
+  buttonClass?: string;
+}
+
+const {
+  buttonId,
+  label = 'Register now',
+  buttonClass = 'p-button--positive',
+} = Astro.props;
+
+// Stable, URL-safe DOM ID derived from the buttonId.
+const uid = `kh-${buttonId.replace(/[^a-zA-Z0-9]/g, '')}`;
+---
+
+<!--
+  Off-screen mount point. KonfHub's widget.js locates its own <script> tag,
+  mounts a React root, and renders a <button> into the surrounding DOM.
+  We park that subtree here using position:fixed + large negative offset so
+  the node is technically rendered (required for React visibility checks) but
+  never visible to the user. width/height:0 + overflow:hidden prevents any
+  layout contribution or focus-tab leakage.
+-->
+<span
+  id={`${uid}-container`}
+  aria-hidden="true"
+  style="position:fixed;top:-9999px;left:-9999px;width:0;height:0;overflow:hidden;"
+></span>
+
+<!--
+  Our Vanilla Framework trigger button.
+  Proxies click events to the hidden KonfHub button so we fully own
+  the visual style while KonfHub owns the popup/modal behaviour.
+-->
+<button
+  id={`${uid}-trigger`}
+  type="button"
+  class={buttonClass}
+  data-kh-uid={uid}
+  data-kh-bid={buttonId}
+  data-kh-label={label}
+  aria-haspopup="dialog"
+  aria-label={label}
+>
+  {label}
+</button>
+
+<script>
+  /**
+   * Module-level Set: tracks UIDs that have already been wired up.
+   * Because Astro deduplicates bundled module scripts, this Set is a
+   * true singleton for the page lifetime — safe even when multiple
+   * KonfHubWidget instances appear on the same page.
+   */
+  const inited = new Set<string>();
+
+  function initWidgets(): void {
+    document
+      .querySelectorAll<HTMLButtonElement>('button[data-kh-uid]')
+      .forEach((trigger) => {
+        const uid = trigger.dataset.khUid!;
+        if (inited.has(uid)) return;
+        inited.add(uid);
+
+        const bid = trigger.dataset.khBid!;
+        const originalLabel =
+          trigger.dataset.khLabel ?? trigger.textContent?.trim() ?? 'Register now';
+        const container = document.getElementById(`${uid}-container`);
+        if (!container) return;
+
+        let khBtn: HTMLButtonElement | null = null;
+
+        // --- Inject the KonfHub widget script client-side only ---
+        // KonfHub's widget.js reads the `button_id` attribute from its own
+        // <script> node, mounts a React app, and inserts a <button> into the
+        // DOM immediately after that node (inside our container).
+        const script = document.createElement('script');
+        script.src = 'https://widget.konfhub.com/widget.js';
+        script.setAttribute('button_id', bid);
+
+        script.addEventListener('load', () => {
+          // React needs at least one microtask to mount; poll briefly.
+          let attempts = 0;
+          const poll = setInterval(() => {
+            const found = container.querySelector<HTMLButtonElement>('button');
+            if (found) {
+              khBtn = found;
+              clearInterval(poll);
+            } else if (++attempts > 80) {
+              // Give up after ~6 s — widget silently failed to render.
+              clearInterval(poll);
+            }
+          }, 75);
+        });
+
+        script.addEventListener('error', () => {
+          // Network/script load failure — leave our button enabled so the
+          // user can at least see it; disable the popup behaviour gracefully.
+          console.warn(`[KonfHubWidget] Failed to load widget script for ${bid}`);
+        });
+
+        container.appendChild(script);
+
+        // --- Wire our styled button to proxy-click the hidden KonfHub button ---
+        trigger.addEventListener('click', () => {
+          const btn =
+            khBtn ?? container.querySelector<HTMLButtonElement>('button');
+
+          if (btn) {
+            btn.click();
+            return;
+          }
+
+          // Widget script hasn't rendered its button yet (slow network).
+          // Show a transient "Loading…" state and open the popup once ready.
+          const prevLabel = trigger.textContent ?? originalLabel;
+          trigger.textContent = 'Loading…';
+          trigger.disabled = true;
+          trigger.setAttribute('aria-busy', 'true');
+
+          const wait = setInterval(() => {
+            const queued =
+              container.querySelector<HTMLButtonElement>('button');
+            if (queued) {
+              clearInterval(wait);
+              trigger.textContent = prevLabel;
+              trigger.disabled = false;
+              trigger.removeAttribute('aria-busy');
+              queued.click();
+            }
+          }, 100);
+
+          // Hard timeout after 10 s — restore button and stop waiting.
+          setTimeout(() => {
+            clearInterval(wait);
+            trigger.textContent = originalLabel;
+            trigger.disabled = false;
+            trigger.removeAttribute('aria-busy');
+          }, 10_000);
+        });
+      });
+  }
+
+  // Support both page-load and Astro View Transitions re-renders.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWidgets);
+  } else {
+    initWidgets();
+  }
+
+  // Re-run after View Transitions navigation if the project ever enables them.
+  document.addEventListener('astro:page-load', initWidgets);
+</script>
