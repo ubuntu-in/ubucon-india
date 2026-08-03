@@ -7,6 +7,7 @@ import { Image } from "astro:assets";
 import { url } from "../../../lib/url";
 import { dateRange, longDate } from "../../../lib/dates";
 import { getIndico } from "../../../lib/indico";
+import KonfHubWidget from "../../../components/KonfHubWidget.astro";
 
 export async function getStaticPaths() {
   const editions = await getCollection("event");
@@ -52,7 +53,10 @@ const upcoming = (await getCollection("event"))
 
 const cfpOpen = !past && e.cfpUrl;
 
-const ticketActive = !past && !!e.ticketUrl;
+// KonfHub popup takes priority over a plain ticketUrl redirect.
+const konfhubActive        = !past && !!e.konfhubButtonId;
+const konfhubBrandedActive = !past && !!e.konfhubBrandedButtonId;
+const ticketActive         = !past && !konfhubActive && !!e.ticketUrl;
 const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
 ---
 
@@ -89,9 +93,16 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
           {
             !past ? (
               <>
-                {ticketActive ? (
+                {konfhubActive ? (
+                  /* KonfHub popup — stays on page, no redirect. */
+                  <KonfHubWidget
+                    buttonId={e.konfhubButtonId!}
+                    label="Register now"
+                    buttonClass="p-button--positive ov-btn-cta"
+                  />
+                ) : ticketActive ? (
                   <a
-                    class="p-button--positive"
+                    class="p-button--positive ov-btn-cta"
                     href={e.ticketUrl}
                     rel="noopener"
                     target="_blank"
@@ -100,7 +111,7 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
                   </a>
                 ) : (
                   <button
-                    class="p-button--positive"
+                    class="p-button--positive ov-btn-cta"
                     type="button"
                     disabled
                     aria-disabled="true"
@@ -109,7 +120,7 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
                     Register now
                   </button>
                 )}
-                <a class="p-button" href={sub("sponsors")}>
+                <a class="p-button has-icon ov-btn-cta ov-btn-sponsor" href={sub("sponsors")}>
                   <Icon name="award-fill" size={16} /> Become a sponsor
                 </a>
                 {hasSchedule && (
@@ -407,6 +418,12 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
   .ov-cta .p-button,
   .ov-cta .p-button--positive {
     margin: 0;
+  }
+  .ov-btn-cta,
+  .ov-btn-sponsor {
+    min-width: 14.5rem;
+    display: inline-flex;
+    justify-content: center;
   }
   .ov-cta button:disabled {
     cursor: not-allowed;
