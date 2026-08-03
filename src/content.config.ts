@@ -20,6 +20,8 @@ const event = defineCollection({
       .array(z.object({ label: z.string(), image: image().optional(), url: z.url().optional() }))
       .default([]),
     ticketUrl: z.url().optional(),
+    konfhubButtonId: z.string().optional(),         // primary (green) KonfHub popup button
+    konfhubBrandedButtonId: z.string().optional(),   // Ubuntu-branded (orange+logo) KonfHub popup button
     prospectusUrl: z.url().optional(),
     cfpUrl: z.url().optional(),
     cfpDeadline: z.coerce.date().optional(),
