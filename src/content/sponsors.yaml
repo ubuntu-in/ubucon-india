@@ -4,6 +4,13 @@
   tier: diamond
   logo: ../assets/sponsors/canonical.svg
   url: https://canonical.com
+  tagline: Publisher of Ubuntu, enabling open-source innovation globally.
+  description: |
+    Canonical is the company behind Ubuntu, the OS for modern enterprise, cloud, IoT, and desktop. Canonical provides enterprise security, support, and services for open-source software.
+  socials:
+    x: https://x.com/canonical
+    github: https://github.com/canonical
+    linkedin: https://www.linkedin.com/company/canonical
 
 - id: cdac
   editions: [asia-2024]
@@ -18,6 +25,12 @@
   tier: gold
   logo: ../assets/sponsors/qualcomm.svg
   url: https://qualcomm.com
+  tagline: World leader in wireless technology and mobile innovation.
+  description: |
+    Qualcomm creates foundational technologies that transform how the world connects, computes, and communicates, powering intelligent edge and mobile platforms.
+  socials:
+    x: https://x.com/qualcomm
+    linkedin: https://www.linkedin.com/company/qualcomm
 
 - id: bmsce
   editions: [india-2026]
@@ -46,6 +59,12 @@
   tier: community
   logo: ../assets/sponsors/itsfoss.png
   url: https://itsfoss.com
+  tagline: Leading web publication dedicated to Linux and Open Source.
+  description: |
+    It's FOSS is a popular web portal covering open-source software, Linux tutorials, desktop news, and community stories for developer enthusiasts.
+  socials:
+    x: https://x.com/itsfoss2
+    github: https://github.com/itsfoss
 
 - id: konfhub
   editions: [india-2025, india-2026]
@@ -53,3 +72,8 @@
   tier: community
   logo: ../assets/sponsors/konfhub.svg
   url: https://konfhub.com
+  tagline: Complete event ticketing and management platform for tech conferences.
+  description: |
+    KonfHub helps tech communities host and manage technical conferences, workshops, and hackathons with seamless ticketing and speaker management.
+  socials:
+    linkedin: https://www.linkedin.com/company/konfhub

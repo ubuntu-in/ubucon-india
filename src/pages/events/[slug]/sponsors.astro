@@ -133,7 +133,6 @@ const crumbs = [
 
       {
         upcoming ? (
-          /* Become a sponsor CTA - always sells the latest (upcoming) event. */
           <div class="sponsor-cta">
             <div class="sponsor-cta__text">
               <h2 class="sponsor-cta__title">
@@ -161,7 +160,6 @@ const crumbs = [
             </div>
           </div>
         ) : (
-          /* No upcoming edition to sponsor - invite a community donation instead. */
           <div class="sponsor-cta">
             <div class="sponsor-cta__text">
               <h2 class="sponsor-cta__title">Support the community</h2>
@@ -248,13 +246,19 @@ const crumbs = [
     display: block;
     text-decoration: none;
   }
-  .tier__logos :global(.p-logo-section__logo) {
-    width: var(--box-w);
-    height: var(--box-h);
-    max-width: 100%;
+
+  .sponsor-logo {
+    max-height: 50px;
+    width: auto;
     object-fit: contain;
-    object-position: left center;
+    margin-bottom: 0.5rem;
   }
+
+  .tagline {
+    margin: 0.25rem 0 0.5rem 0;
+    color: #555;
+  }
+
   .logo__name {
     font-weight: 600;
     font-size: 1.125rem;
