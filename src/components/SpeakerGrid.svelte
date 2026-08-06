@@ -59,7 +59,7 @@
           {/if}
         </div>
         <div class="p-card__inner">
-          <h3>{s.name}</h3>
+          <h3 class="p-heading--5">{s.name}</h3>
           {#if s.role}<p class="p-card__content u-text--muted">{s.role}</p>{/if}
         </div>
       </div>
@@ -117,7 +117,7 @@
     opacity: 0.85;
   }
   .speaker__badge { position: absolute; top: 0.5rem; left: 0.5rem; margin: 0; }
-  .p-card__inner { display: flex; flex-direction: column; gap: 0.4rem; flex: 1; }
+  .p-card__content { font-size: 0.9rem; line-height: 1.4; }
 
   .pagination { display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: center; margin-top: 2.5rem; }
   .pg {
