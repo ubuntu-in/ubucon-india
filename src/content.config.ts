@@ -25,7 +25,7 @@ const event = defineCollection({
     cfpDeadline: z.coerce.date().optional(),
     volunteerUrl: z.url().optional(),
     volunteerDeadline: z.coerce.date().optional(),
-    highlightsUrl: z.url().optional(),
+    highlightsUrl: z.url().optional(), // recap/album link
     stats: z.array(z.object({ n: z.string(), label: z.string() })).default([]),
     gallery: z.array(z.object({ src: image(), alt: z.string() })).default([]),
     venueAddress: z.string().optional(),

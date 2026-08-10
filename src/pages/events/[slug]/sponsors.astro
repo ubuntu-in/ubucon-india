@@ -133,6 +133,7 @@ const crumbs = [
 
       {
         upcoming ? (
+          /* Become a sponsor CTA - always sells the latest (upcoming) event. */
           <div class="sponsor-cta">
             <div class="sponsor-cta__text">
               <h2 class="sponsor-cta__title">
@@ -160,6 +161,7 @@ const crumbs = [
             </div>
           </div>
         ) : (
+          /* No upcoming edition to sponsor - invite a community donation instead. */
           <div class="sponsor-cta">
             <div class="sponsor-cta__text">
               <h2 class="sponsor-cta__title">Support the community</h2>
