@@ -83,6 +83,7 @@ const sponsors = defineCollection({
     url: z.url(),
     tagline: z.string().optional(),
     description: z.string().optional(),
+    engagement: z.string().optional(),
     socials: z.object({
       x: z.url().optional(),
       linkedin: z.url().optional(),
