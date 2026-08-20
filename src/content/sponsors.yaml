@@ -53,3 +53,48 @@
   tier: community
   logo: ../assets/sponsors/konfhub.svg
   url: https://konfhub.com
+  tagline: Complete event ticketing and management platform for tech conferences.
+  description: |
+    KonfHub helps tech communities host and manage technical conferences, workshops, and hackathons with seamless ticketing and speaker management.
+  socials:
+    linkedin: https://www.linkedin.com/company/konfhub
+
+- id: ente
+  editions: [india-2026]
+  name: Ente
+  tier: supporter
+  logo: ../assets/sponsors/ente.svg
+  url: https://ente.io
+  tagline: Official storage partner — end-to-end encrypted cloud for photos and data.
+  description: |
+    Ente is the official storage partner of UbuCon India 2026. Ente provides end-to-end encrypted cloud storage for photos, videos, and files, ensuring the event's media and memories stay private and secure.
+  socials:
+    x: https://x.com/enteio
+    github: https://github.com/ente-io
+
+- id: zulip
+  editions: [india-2026]
+  name: Zulip
+  tier: supporter
+  logo: ../assets/sponsors/zulip.svg
+  url: https://zulip.com
+  tagline: Communication platform powering UbuCon India's team chat.
+  description: |
+    Zulip is the communication partner of UbuCon India 2026, providing the team's threaded chat platform used to coordinate organisers, speakers, and volunteers throughout the event.
+  socials:
+    x: https://x.com/zulip
+    github: https://github.com/zulip
+
+- id: onepassword
+  editions: [india-2026]
+  name: 1Password
+  tier: supporter
+  logo: ../assets/sponsors/1password.svg
+  url: https://1password.com
+  tagline: Providing free credential management for volunteers and speakers.
+  description: |
+    1Password is the credential partner of UbuCon India 2026, providing free 1Password memberships to all volunteers and speakers to securely share and manage access during the conference.
+  socials:
+    x: https://x.com/1password
+    linkedin: https://www.linkedin.com/company/1password
+    github: https://github.com/1password
