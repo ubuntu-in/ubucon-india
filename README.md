@@ -28,7 +28,7 @@ Node >= 22.12.
 src/
   content/    Event data as YAML (the stuff you edit most). Validated by Zod.
   pages/      Routes. index.astro is the home page; events/ holds per-edition pages.
-  components/ Reusable Astro + Svelte components (Nav, Footer, SpeakerGrid, ...).
+  components/ Reusable Astro + Svelte components (Nav, Footer, PeopleGrid, ...).
   layouts/    Base.astro wraps every page.
   lib/        Helpers: url() (base-path links), dates, Indico fetch.
   styles/     global.scss (brand tokens + Vanilla imports).

@@ -42,7 +42,7 @@ const totalPages = Math.max(1, Math.ceil(editions.length / PAGE_SIZE));
         upcoming && (
           <div class="p-notification--information is-inline events-banner">
             <div class="p-notification__content">
-              <span class="p-notification__title">Registrations are open.</span>
+              <span class="p-notification__title">Registrations are open.</span>{" "}
               <p class="p-notification__message">
                 Join {upcoming.data.name} on{" "}
                 {dateRange(upcoming.data.startDate, upcoming.data.endDate)} in{" "}

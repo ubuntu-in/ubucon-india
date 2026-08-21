@@ -39,10 +39,11 @@ src/
       index.astro         /events listing (all editions).
       [slug]/             Per-edition pages (dynamic route keyed by edition slug).
         index.astro       Edition landing / Overview.
-        speakers.astro  schedule.astro  sponsors.astro  venue.astro
+        speakers.astro  schedule.astro  sponsors.astro  supporters.astro
+        venue.astro     volunteers.astro
   layouts/Base.astro      Wraps every page (head, Nav, Footer, global styles).
   components/             Nav, Footer, Icon, Breadcrumbs, Pagination (Astro);
-                          SpeakerGrid (Svelte island).
+                          PeopleGrid (Svelte island).
   content/                YAML data + content.config.ts (Zod schemas).
   lib/                    url.ts, dates.ts, indico.ts.
   styles/global.scss      Brand tokens (CSS vars) + Vanilla imports + a few overrides.
@@ -75,7 +76,7 @@ schema field is a code change and belongs here; filling it in is
 ### Reach for Svelte only when you must
 
 Pages are static HTML. Add a Svelte island (with a `client:*` directive) only
-when the DOM needs to react at runtime - `SpeakerGrid.svelte` (chip filtering) is
+when the DOM needs to react at runtime - `PeopleGrid.svelte` (chip filtering) is
 the one current example. Prefer CSS (see `Nav.astro`'s pure-CSS mobile menu)
 before adding JS.
 
