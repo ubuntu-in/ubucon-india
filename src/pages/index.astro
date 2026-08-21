@@ -91,10 +91,28 @@ const cfpTypes = [
             ><Icon name="calendar-event-fill" class="i-accent" size={18} />
             {dates}</span
           >
-          <span
-            ><Icon name="geo-alt-fill" class="i-accent" size={18} />
-            {e.city}</span
-          >
+          <span>
+            <Icon
+              name={e.venue ? "building-fill" : "geo-alt-fill"}
+              class="i-accent"
+              size={18}
+            />
+            {
+              e.venue ? (
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                    [e.venue, e.venueAddress ?? e.city].join(", "),
+                  )}`}
+                  rel="noopener"
+                  target="_blank"
+                >
+                  {e.venue}
+                </a>
+              ) : (
+                e.city
+              )
+            }
+          </span>
         </div>
         <div class="hero__cta">
           {regOpen && (
