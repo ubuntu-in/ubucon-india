@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import Base from "../layouts/Base.astro";
 import Icon from "../components/Icon.astro";
+import RegisterCta from "../components/RegisterCta.astro";
 import { url } from "../lib/url";
 import heroArt from "../assets/hero-bengaluru.png";
 
@@ -21,12 +22,13 @@ const e = event.data;
 // if the event is past, show highlights button
 // else show sponsor button
 const past = e.endDate < now;
-const cta = past
-  ? e.highlightsUrl
-    ? { label: "View Highlights", href: e.highlightsUrl, external: true }
-    : null
-  : e.ticketUrl
-    ? { label: "Register Now", href: e.ticketUrl, external: true }
+const regOpen = !past && !!(e.ticketEmbedUrl ?? e.ticketUrl);
+const cta = regOpen
+  ? null
+  : past
+    ? e.highlightsUrl
+      ? { label: "View Highlights", href: e.highlightsUrl, external: true }
+      : null
     : {
         label: "Become a Sponsor",
         href: url(`/events/${event.id}/sponsors`),
@@ -95,6 +97,13 @@ const cfpTypes = [
           >
         </div>
         <div class="hero__cta">
+          {regOpen && (
+            <RegisterCta
+              embedUrl={e.ticketEmbedUrl}
+              ticketUrl={e.ticketUrl}
+              name={e.name}
+            />
+          )}
           {
             cta && (
               <a
@@ -393,12 +402,6 @@ const cfpTypes = [
     display: inline-flex !important;
     align-items: center;
     gap: 0.5rem;
-  }
-  .hero__cta .p-button,
-  .hero__cta .p-button--positive {
-    padding: 0.7rem 1.4rem;
-    font-size: 1.05rem;
-    margin: 0;
   }
 
   /* Hero */
@@ -788,10 +791,6 @@ const cfpTypes = [
     .hero__cta {
       flex-direction: column;
       align-items: stretch;
-    }
-    .hero__cta .p-button,
-    .hero__cta .p-button--positive {
-      justify-content: center;
     }
     /* Sponsors - tighter logos/gaps on phones. */
     .sponsors__row {
