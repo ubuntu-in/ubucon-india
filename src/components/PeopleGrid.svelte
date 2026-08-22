@@ -61,8 +61,19 @@
         {/if}
       </div>
       <div class="p-card__inner">
-        <h3 class="p-heading--4 u-no-margin--bottom">{person.name}</h3>
+        <h3 class="p-card__title u-no-margin--bottom">{person.name}</h3>
         {#if person.role}<p class="u-text--muted u-no-margin--bottom">{person.role}</p>{/if}
+        {#if person.linkedin}
+          <footer class="person-card__footer">
+            <a
+              class="p-icon--linkedin"
+              href={person.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${person.name} on LinkedIn`}
+            ></a>
+          </footer>
+        {/if}
       </div>
     </div>
   {/each}
@@ -116,5 +127,19 @@
     top: 0.5rem;
     left: 0.5rem;
     margin: 0;
+  }
+
+  .grid-row--25-25-25-25 {
+    row-gap: 2rem;
+  }
+
+  .p-card__title {
+    overflow-wrap: anywhere;
+  }
+
+  .person-card__footer {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #d9d9d9;
   }
 </style>

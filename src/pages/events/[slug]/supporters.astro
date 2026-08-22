@@ -32,6 +32,7 @@ const supporters = await Promise.all(
       name: s.name,
       role: [s.designation, s.organisation].filter(Boolean).join(", "),
       photo: await opt(s.photo),
+      linkedin: s.linkedin,
     })),
 );
 

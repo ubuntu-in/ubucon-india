@@ -91,6 +91,7 @@ const supporters = defineCollection({
     name: z.string(),
     organisation: z.string().optional(),
     designation: z.string().optional(),
+    linkedin: z.url().optional(),
     photo: image().optional(),
   }),
 });
