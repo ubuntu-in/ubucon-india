@@ -18,7 +18,7 @@ const id = `reg-modal-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
         type="button"
         onclick={`const m=document.getElementById('${id}');m.style.display='flex';document.body.style.overflow='hidden'`}
       >
-        <i class="p-icon--user-group is-dark"></i>
+        <i class="p-icon--user-group is-dark" />
         <span>Register now</span>
       </button>
       <div class="p-modal" id={id} style="display: none;">
@@ -58,9 +58,14 @@ const id = `reg-modal-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
           {ticketUrl && (
             <p class="p-modal__footer">
               Frame not loading?{" "}
-              <a class="p-button is-small has-icon" href={ticketUrl} rel="noopener" target="_blank">
+              <a
+                class="p-button is-small has-icon"
+                href={ticketUrl}
+                rel="noopener"
+                target="_blank"
+              >
                 <span>Open externally</span>
-                <i class="p-icon--external-link"></i>
+                <i class="p-icon--external-link" />
               </a>
             </p>
           )}
@@ -68,7 +73,12 @@ const id = `reg-modal-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
       </div>
     </>
   ) : ticketUrl ? (
-    <a class="p-button--positive" href={ticketUrl} rel="noopener" target="_blank">
+    <a
+      class="p-button--positive"
+      href={ticketUrl}
+      rel="noopener"
+      target="_blank"
+    >
       Register now
     </a>
   ) : (

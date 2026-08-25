@@ -115,13 +115,15 @@ const cfpTypes = [
           </span>
         </div>
         <div class="hero__cta">
-          {regOpen && (
-            <RegisterCta
-              embedUrl={e.ticketEmbedUrl}
-              ticketUrl={e.ticketUrl}
-              name={e.name}
-            />
-          )}
+          {
+            regOpen && (
+              <RegisterCta
+                embedUrl={e.ticketEmbedUrl}
+                ticketUrl={e.ticketUrl}
+                name={e.name}
+              />
+            )
+          }
           {
             cta && (
               <a

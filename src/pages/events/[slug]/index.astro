@@ -56,7 +56,10 @@ const cfpOpen = !past && e.cfpUrl;
 const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
 ---
 
-<Base title={e.tagline ? `${e.name} — ${e.tagline}` : e.name} description={e.intro}>
+<Base
+  title={e.tagline ? `${e.name} — ${e.tagline}` : e.name}
+  description={e.intro}
+>
   <section class="p-strip is-shallow ov-crumbs">
     <div class="u-container">
       <Breadcrumbs
