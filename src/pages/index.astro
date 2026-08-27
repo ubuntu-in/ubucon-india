@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import Base from "../layouts/Base.astro";
 import Icon from "../components/Icon.astro";
+import RegisterCta from "../components/RegisterCta.astro";
 import { url } from "../lib/url";
 import heroArt from "../assets/hero-bengaluru.png";
 
@@ -21,12 +22,13 @@ const e = event.data;
 // if the event is past, show highlights button
 // else show sponsor button
 const past = e.endDate < now;
-const cta = past
-  ? e.highlightsUrl
-    ? { label: "View Highlights", href: e.highlightsUrl, external: true }
-    : null
-  : e.ticketUrl
-    ? { label: "Register Now", href: e.ticketUrl, external: true }
+const regOpen = !past && !!(e.ticketEmbedUrl ?? e.ticketUrl);
+const cta = regOpen
+  ? null
+  : past
+    ? e.highlightsUrl
+      ? { label: "View Highlights", href: e.highlightsUrl, external: true }
+      : null
     : {
         label: "Become a Sponsor",
         href: url(`/events/${event.id}/sponsors`),
@@ -89,12 +91,39 @@ const cfpTypes = [
             ><Icon name="calendar-event-fill" class="i-accent" size={18} />
             {dates}</span
           >
-          <span
-            ><Icon name="geo-alt-fill" class="i-accent" size={18} />
-            {e.city}</span
-          >
+          <span>
+            <Icon
+              name={e.venue ? "building-fill" : "geo-alt-fill"}
+              class="i-accent"
+              size={18}
+            />
+            {
+              e.venue ? (
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                    [e.venue, e.venueAddress ?? e.city].join(", "),
+                  )}`}
+                  rel="noopener"
+                  target="_blank"
+                >
+                  {e.venue}
+                </a>
+              ) : (
+                e.city
+              )
+            }
+          </span>
         </div>
         <div class="hero__cta">
+          {
+            regOpen && (
+              <RegisterCta
+                embedUrl={e.ticketEmbedUrl}
+                ticketUrl={e.ticketUrl}
+                name={e.name}
+              />
+            )
+          }
           {
             cta && (
               <a
@@ -394,12 +423,6 @@ const cfpTypes = [
     align-items: center;
     gap: 0.5rem;
   }
-  .hero__cta .p-button,
-  .hero__cta .p-button--positive {
-    padding: 0.7rem 1.4rem;
-    font-size: 1.05rem;
-    margin: 0;
-  }
 
   /* Hero */
   .hero {
@@ -448,7 +471,11 @@ const cfpTypes = [
   .hero__cta {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 0.75rem;
+  }
+  .hero__cta :global(.p-button),
+  .hero__cta :global(.p-button--positive) {
+    margin: 0;
   }
   .hero__art {
     width: 100%;
@@ -789,9 +816,9 @@ const cfpTypes = [
       flex-direction: column;
       align-items: stretch;
     }
-    .hero__cta .p-button,
-    .hero__cta .p-button--positive {
-      justify-content: center;
+    .hero__cta :global(.p-button),
+    .hero__cta :global(.p-button--positive) {
+      text-align: center;
     }
     /* Sponsors - tighter logos/gaps on phones. */
     .sponsors__row {

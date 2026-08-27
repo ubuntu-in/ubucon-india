@@ -20,6 +20,7 @@ const event = defineCollection({
       .array(z.object({ label: z.string(), image: image().optional(), url: z.url().optional() }))
       .default([]),
     ticketUrl: z.url().optional(),
+    ticketEmbedUrl: z.url().optional(), // registration widget iframe src (provider-agnostic)
     prospectusUrl: z.url().optional(),
     cfpUrl: z.url().optional(),
     cfpDeadline: z.coerce.date().optional(),
@@ -100,6 +101,7 @@ const supporters = defineCollection({
     name: z.string(),
     organisation: z.string().optional(),
     designation: z.string().optional(),
+    linkedin: z.url().optional(),
     photo: image().optional(),
   }),
 });

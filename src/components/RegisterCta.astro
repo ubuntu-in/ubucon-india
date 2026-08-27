@@ -1,0 +1,111 @@
+---
+import { url } from "../lib/url";
+
+interface Props {
+  embedUrl?: string;
+  ticketUrl?: string;
+  name: string;
+}
+const { embedUrl, ticketUrl, name } = Astro.props;
+const id = `reg-modal-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+---
+
+{
+  embedUrl ? (
+    <>
+      <button
+        class="p-button--positive has-icon"
+        type="button"
+        onclick={`const m=document.getElementById('${id}');m.style.display='flex';document.body.style.overflow='hidden'`}
+      >
+        <i class="p-icon--user-group is-dark" />
+        <span>Register now</span>
+      </button>
+      <div class="p-modal" id={id} style="display: none;">
+        <div
+          class="p-modal__dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={`${id}-title`}
+        >
+          <header class="p-modal__header">
+            <h2 class="p-modal__title" id={`${id}-title`}>
+              <img
+                src={url("/img/ubuntu-india-logo.svg")}
+                alt=""
+                width="24"
+                height="24"
+                style="border-radius: 50%"
+              />
+              <span>Register now</span>
+            </h2>
+            <button
+              class="p-modal__close"
+              aria-label="Close"
+              onclick={`const m=document.getElementById('${id}');m.style.display='none';document.body.style.overflow=''`}
+            >
+              Close
+            </button>
+          </header>
+          <iframe
+            src={embedUrl}
+            title={`Register for ${name}`}
+            width="100%"
+            height="500"
+            loading="lazy"
+            allow="payment"
+          />
+          {ticketUrl && (
+            <p class="p-modal__footer">
+              Frame not loading?{" "}
+              <a
+                class="p-button is-small has-icon"
+                href={ticketUrl}
+                rel="noopener"
+                target="_blank"
+              >
+                <span>Open externally</span>
+                <i class="p-icon--external-link" />
+              </a>
+            </p>
+          )}
+        </div>
+      </div>
+    </>
+  ) : ticketUrl ? (
+    <a
+      class="p-button--positive"
+      href={ticketUrl}
+      rel="noopener"
+      target="_blank"
+    >
+      Register now
+    </a>
+  ) : (
+    <button
+      class="p-button--positive"
+      type="button"
+      disabled
+      aria-disabled="true"
+      title="Registration not open yet"
+    >
+      Register now
+    </button>
+  )
+}
+
+<style>
+  .p-modal__dialog {
+    @media (min-width: 772px) {
+      width: min(40rem, 92vw);
+    }
+  }
+  .p-modal__footer {
+    text-align: center;
+  }
+  .p-modal__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+</style>

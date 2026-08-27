@@ -23,59 +23,50 @@ const { entry } = Astro.props;
 const e = entry.data;
 const slug = entry.id;
 
-const speakers = await Promise.all(
-  (await getCollection("lineup", ({ data }) => data.edition.includes(slug)))
+const supporters = await Promise.all(
+  (await getCollection("supporters", ({ data }) => data.edition.includes(slug)))
     .map(({ id, data: s }) => ({ ...s, id }))
-    .sort(
-      (a, b) =>
-        Number(b.featured) - Number(a.featured) || a.name.localeCompare(b.name),
-    )
+    .sort((a, b) => a.name.localeCompare(b.name))
     .map(async (s) => ({
       id: s.id,
       name: s.name,
-      role: s.affiliation,
+      role: [s.designation, s.organisation].filter(Boolean).join(", "),
       photo: await opt(s.photo),
-      category: s.track,
-      featured: s.featured,
+      linkedin: s.linkedin,
     })),
 );
-
-const categoryIcons = {
-  "AI & ML": "generative-ai",
-  "Cloud & Infrastructure": "machines",
-  Desktop: "desktop",
-  "DevOps & Security": "security",
-  "Docs & Community": "comments",
-  "Embedded Systems & IoT": "connected",
-};
 
 const crumbs = [
   { label: "Events", href: url("/events") },
   { label: e.name, href: url(`/events/${slug}`) },
-  { label: "Speakers" },
+  { label: "Supporters" },
 ];
 ---
 
-<Base title={`Speakers · ${e.name}`} description={`Speakers for ${e.name}.`}>
+<Base
+  title={`Supporters · ${e.name}`}
+  description={`Supporter pass holders of ${e.name}.`}
+>
   <section class="p-strip">
     <div class="u-container">
       <Breadcrumbs items={crumbs} />
-      <h1 class="h-xl u-aubergine">Speakers</h1>
+      <h1 class="h-xl u-aubergine">Supporters</h1>
       <p class="body u-sv3">
-        Meet the people sharing their ideas, stories and expertise at {e.name}.
+        The people who backed {e.name} with a supporter pass. Their support helps
+        keep the conference accessible to everyone.
       </p>
 
       {
-        speakers.length === 0 ? (
+        supporters.length === 0 ? (
           <p class="body">
-            Speakers will be announced after the call for proposals closes.
+            Supporter pass holders for this edition will be listed here.
           </p>
         ) : (
           <PeopleGrid
             client:load
-            people={speakers}
-            label="Speakers"
-            categoryIcons={categoryIcons}
+            people={supporters}
+            label="Supporters"
+            pageSize={100}
           />
         )
       }

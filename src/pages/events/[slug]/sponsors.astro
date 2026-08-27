@@ -51,7 +51,10 @@ const crumbs = [
 ];
 ---
 
-<Base title={`Sponsors & Partners · ${e.name}`} description={`Sponsors and Partners of ${e.name}.`}>
+<Base
+  title={`Sponsors & Partners · ${e.name}`}
+  description={`Sponsors and Partners of ${e.name}.`}
+>
   <section class="p-strip">
     <div class="u-container">
       <Breadcrumbs items={crumbs} />
@@ -79,8 +82,7 @@ const crumbs = [
         groups.length === 0 ? (
           <p class="body empty">
             Sponsors will be announced soon. Interested in supporting UbuCon
-            India?{" "}
-            <a href={url("/contact")}>Get in touch.</a>
+            India? <a href={url("/contact")}>Get in touch.</a>
           </p>
         ) : (
           <div class="tier-sections">
@@ -90,7 +92,9 @@ const crumbs = [
                 <div class="tier-section">
                   <div class="tier__head">
                     <h2 class="h-md tier__name">{TIER_META[g.tier].label}</h2>
-                    <span class="u-text--muted tier__sub">{TIER_META[g.tier].sub}</span>
+                    <span class="u-text--muted tier__sub">
+                      {TIER_META[g.tier].sub}
+                    </span>
                   </div>
                   <div
                     class:list={[

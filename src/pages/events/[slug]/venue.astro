@@ -95,7 +95,11 @@ const crumbs = [
                 <h2 class="h-md">Getting there</h2>
                 <aside class="p-accordion">
                   {e.gettingThere.map((g, i) => (
-                    <details class="p-accordion__group" open={i === 0} style="margin-bottom: 0;">
+                    <details
+                      class="p-accordion__group"
+                      open={i === 0}
+                      style="margin-bottom: 0;"
+                    >
                       <summary
                         class="p-accordion__tab"
                         style="list-style: none; padding-left: 1rem;"

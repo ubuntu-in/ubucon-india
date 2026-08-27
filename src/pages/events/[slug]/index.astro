@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import Base from "../../../layouts/Base.astro";
 import Icon from "../../../components/Icon.astro";
 import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import RegisterCta from "../../../components/RegisterCta.astro";
 import { Image } from "astro:assets";
 import { url } from "../../../lib/url";
 import { dateRange, longDate } from "../../../lib/dates";
@@ -52,11 +53,13 @@ const upcoming = (await getCollection("event"))
 
 const cfpOpen = !past && e.cfpUrl;
 
-const ticketActive = !past && !!e.ticketUrl;
 const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
 ---
 
-<Base title={e.tagline ? `${e.name} — ${e.tagline}` : e.name} description={e.intro}>
+<Base
+  title={e.tagline ? `${e.name} — ${e.tagline}` : e.name}
+  description={e.intro}
+>
   <section class="p-strip is-shallow ov-crumbs">
     <div class="u-container">
       <Breadcrumbs
@@ -89,26 +92,11 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
           {
             !past ? (
               <>
-                {ticketActive ? (
-                  <a
-                    class="p-button--positive"
-                    href={e.ticketUrl}
-                    rel="noopener"
-                    target="_blank"
-                  >
-                    Register now
-                  </a>
-                ) : (
-                  <button
-                    class="p-button--positive"
-                    type="button"
-                    disabled
-                    aria-disabled="true"
-                    title="Registration not open yet"
-                  >
-                    Register now
-                  </button>
-                )}
+                <RegisterCta
+                  embedUrl={e.ticketEmbedUrl}
+                  ticketUrl={e.ticketUrl}
+                  name={e.name}
+                />
                 <a class="p-button" href={sub("sponsors")}>
                   <Icon name="award-fill" size={16} /> Become a sponsor
                 </a>
@@ -404,8 +392,8 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
     flex-wrap: wrap;
     gap: 0.75rem;
   }
-  .ov-cta .p-button,
-  .ov-cta .p-button--positive {
+  .ov-cta :global(.p-button),
+  .ov-cta :global(.p-button--positive) {
     margin: 0;
   }
   .ov-cta button:disabled {
@@ -629,8 +617,8 @@ const hasSchedule = (await getIndico(e.indicoId)).sessions.length > 0;
       flex-direction: column;
       align-items: stretch;
     }
-    .ov-cta .p-button,
-    .ov-cta .p-button--positive {
+    .ov-cta :global(.p-button),
+    .ov-cta :global(.p-button--positive) {
       text-align: center;
     }
   }
