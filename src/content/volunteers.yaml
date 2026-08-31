@@ -48,3 +48,8 @@
   name: Vutukuri Sreenivasan
   github: "cnu1812"
   team: ["Core"]
+- id: "NBR24"
+  edition: ["india-2026"]
+  name: "Navami BR"
+  github: "NBR-24"
+  team: ["Design"]
