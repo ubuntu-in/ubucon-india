@@ -76,11 +76,21 @@ const volunteers = defineCollection({
 const sponsors = defineCollection({
   loader: file('src/content/sponsors.yaml'),
   schema: ({ image }) => z.object({
-    editions: z.array(z.string()).nonempty(),
+    id: z.string(),
+    editions: z.array(z.string()),
     name: z.string(),
     tier: z.enum(['diamond', 'platinum', 'gold', 'silver', 'bronze', 'venue', 'supporter', 'community']),
     logo: image().optional(),
     url: z.url(),
+    tagline: z.string().optional(),
+    description: z.string().optional(),
+    engagement: z.string().optional(),
+    socials: z.object({
+      x: z.url().optional(),
+      linkedin: z.url().optional(),
+      github: z.url().optional(),
+      site: z.url().optional(),
+    }).optional(),
   }),
 });
 
