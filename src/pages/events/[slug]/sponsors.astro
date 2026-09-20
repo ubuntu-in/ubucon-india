@@ -115,7 +115,7 @@ const crumbs = [
                           >
                             {s.logo ? (
                               <Image
-                                class="p-logo-section__logo"
+                                class="p-logo-section__logo sponsor-logo"
                                 src={s.logo}
                                 alt={s.name}
                                 loading="lazy"
@@ -124,6 +124,32 @@ const crumbs = [
                               <span class="logo__name">{s.name}</span>
                             )}
                           </a>
+                          {s.tagline && <p class="tagline">{s.tagline}</p>}
+                          {s.engagement && <p class="engagement">{s.engagement}</p>}
+                          {s.socials && (
+                            <div class="sponsor-socials">
+                              {s.socials.site && (
+                                <a href={s.socials.site} target="_blank" rel="noopener noreferrer">
+                                  Website
+                                </a>
+                              )}
+                              {s.socials.x && (
+                                <a href={s.socials.x} target="_blank" rel="noopener noreferrer">
+                                  X
+                                </a>
+                              )}
+                              {s.socials.linkedin && (
+                                <a href={s.socials.linkedin} target="_blank" rel="noopener noreferrer">
+                                  LinkedIn
+                                </a>
+                              )}
+                              {s.socials.github && (
+                                <a href={s.socials.github} target="_blank" rel="noopener noreferrer">
+                                  GitHub
+                                </a>
+                              )}
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -252,13 +278,36 @@ const crumbs = [
     display: block;
     text-decoration: none;
   }
-  .tier__logos :global(.p-logo-section__logo) {
-    width: var(--box-w);
-    height: var(--box-h);
+
+  .sponsor-logo {
     max-width: 100%;
-    object-fit: contain;
-    object-position: left center;
   }
+
+  .tagline {
+    margin: 0.25rem 0 0.25rem 0;
+    color: #555;
+    font-size: 0.875rem;
+  }
+
+  .engagement {
+    margin: 0 0 0.5rem 0;
+    color: #666;
+    font-size: 0.8rem;
+    font-style: italic;
+  }
+
+  .sponsor-socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+  .sponsor-socials a {
+    color: var(--u-orange, #e95420);
+    text-decoration: underline;
+  }
+
   .logo__name {
     font-weight: 600;
     font-size: 1.125rem;

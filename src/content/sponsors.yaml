@@ -4,6 +4,13 @@
   tier: diamond
   logo: ../assets/sponsors/canonical.svg
   url: https://canonical.com
+  tagline: Publisher of Ubuntu, enabling open-source innovation globally.
+  description: |
+    Canonical is the company behind Ubuntu, the OS for modern enterprise, cloud, IoT, and desktop. Canonical provides enterprise security, support, and services for open-source software.
+  socials:
+    x: https://x.com/canonical
+    github: https://github.com/canonical
+    linkedin: https://www.linkedin.com/company/canonical
 
 - id: cdac
   editions: [asia-2024]
@@ -18,6 +25,12 @@
   tier: gold
   logo: ../assets/sponsors/qualcomm.svg
   url: https://qualcomm.com
+  tagline: World leader in wireless technology and mobile innovation.
+  description: |
+    Qualcomm creates foundational technologies that transform how the world connects, computes, and communicates, powering intelligent edge and mobile platforms.
+  socials:
+    x: https://x.com/qualcomm
+    linkedin: https://www.linkedin.com/company/qualcomm
 
 - id: bmsce
   editions: [india-2026]
@@ -46,6 +59,12 @@
   tier: community
   logo: ../assets/sponsors/itsfoss.png
   url: https://itsfoss.com
+  tagline: Leading web publication dedicated to Linux and Open Source.
+  description: |
+    It's FOSS is a popular web portal covering open-source software, Linux tutorials, desktop news, and community stories for developer enthusiasts.
+  socials:
+    x: https://x.com/itsfoss2
+    github: https://github.com/itsfoss
 
 - id: konfhub
   editions: [india-2025, india-2026]
@@ -58,43 +77,3 @@
     KonfHub helps tech communities host and manage technical conferences, workshops, and hackathons with seamless ticketing and speaker management.
   socials:
     linkedin: https://www.linkedin.com/company/konfhub
-
-- id: ente
-  editions: [india-2026]
-  name: Ente
-  tier: supporter
-  logo: ../assets/sponsors/ente.svg
-  url: https://ente.com
-  tagline: Official storage partner — end-to-end encrypted cloud for photos and data.
-  description: |
-    Ente is the official storage partner of UbuCon India 2026. Ente provides end-to-end encrypted cloud storage for photos, videos, and files, ensuring the event's media and memories stay private and secure.
-  socials:
-    x: https://x.com/enteio
-    github: https://github.com/ente-io
-
-- id: zulip
-  editions: [india-2026]
-  name: Zulip
-  tier: supporter
-  logo: ../assets/sponsors/zulip.svg
-  url: https://zulip.com
-  tagline: Communication platform powering UbuCon India's team chat.
-  description: |
-    Zulip is the communication partner of UbuCon India 2026, providing the team's threaded chat platform used to coordinate organisers, speakers, and volunteers throughout the event.
-  socials:
-    x: https://x.com/zulip
-    github: https://github.com/zulip
-
-- id: onepassword
-  editions: [india-2026]
-  name: 1Password
-  tier: supporter
-  logo: ../assets/sponsors/1password.svg
-  url: https://1password.com
-  tagline: Providing free credential management for volunteers and speakers.
-  description: |
-    1Password is the credential partner of UbuCon India 2026, providing free 1Password memberships to all volunteers and speakers to securely share and manage access during the conference.
-  socials:
-    x: https://x.com/1password
-    linkedin: https://www.linkedin.com/company/1password
-    github: https://github.com/1password
