@@ -99,5 +99,22 @@ const orgSchema =
       <slot />
     </main>
     <Footer />
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const ref = params.get("ref");
+      if (ref && !params.has("utm_source")) params.set("utm_source", ref);
+
+      for (const link of document.querySelectorAll<HTMLAnchorElement>(
+        'a[href^="https://konfhub.com/"]',
+      )) {
+        const target = new URL(link.href);
+        for (const [key, value] of params) {
+          if (key.startsWith("utm_") && value) {
+            target.searchParams.set(key, value);
+          }
+        }
+        link.href = target.href;
+      }
+    </script>
   </body>
 </html>
