@@ -26,6 +26,13 @@
   logo: ../assets/sponsors/bmsce.png
   url: https://bmsce.ac.in
 
+- id: penpot
+  editions: [india-2026]
+  name: Penpot
+  tier: exhibitor
+  logo: ../assets/sponsors/penpot.svg
+  url: https://penpot.app
+
 - id: onlyoffice
   editions: [asia-2024]
   name: ONLYOFFICE
