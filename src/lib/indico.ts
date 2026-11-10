@@ -12,6 +12,7 @@ export interface IndicoSession {
   speakers: string[]; // display names
   track?: string;
   room?: string;
+  url?: string; // contribution page on Indico
   start: Date;
   end: Date;
 }
@@ -59,6 +60,7 @@ async function load(eventId: number): Promise<IndicoData> {
       speakers: speakerList.map(speakerName).filter(Boolean),
       track: c.track || undefined,
       room: c.roomFullname || c.room || undefined,
+      url: c.url || undefined,
       start,
       end,
     });

@@ -61,7 +61,15 @@ for (const s of sessions) {
                       {timeIST(s.start)}–{timeIST(s.end)}
                     </span>
                     <div class="session__body">
-                      <h3 class="session__title">{s.title}</h3>
+                      <h3 class="session__title">
+                        {s.url ? (
+                          <a href={s.url} rel="noopener" target="_blank">
+                            {s.title}
+                          </a>
+                        ) : (
+                          s.title
+                        )}
+                      </h3>
                       <p class="session__meta">
                         {s.speakers.length > 0 && (
                           <a href={url(`/events/${slug}/speakers`)}>
@@ -116,6 +124,14 @@ for (const s of sessions) {
     font-weight: 700;
     color: var(--u-aubergine);
     margin: 0;
+  }
+  .session__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .session__title a:hover,
+  .session__title a:focus-visible {
+    text-decoration: underline;
   }
   .session__meta {
     display: flex;
