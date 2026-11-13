@@ -8,6 +8,7 @@ const INDICO_BASE = 'https://events.canonical.com';
 
 export interface IndicoSession {
   id: string;
+  kind: 'talk' | 'break';
   title: string;
   speakers: string[]; // display names
   track?: string;
@@ -41,13 +42,49 @@ function speakerName(s: any): string {
   return [s.first_name, s.last_name].filter(Boolean).join(' ').trim() || s.fullName || '';
 }
 
-async function load(eventId: number): Promise<IndicoData> {
-  const res = await fetch(`${INDICO_BASE}/export/event/${eventId}.json?detail=contributions`);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const json = await res.json();
-  const contribs: any[] = json?.results?.[0]?.contributions ?? [];
+async function getJson(path: string): Promise<any> {
+  const res = await fetch(`${INDICO_BASE}${path}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${path}`);
+  return res.json();
+}
 
-  const sessions: IndicoSession[] = [];
+function timetableExtras(entries: any[], parentRoom?: string): IndicoSession[] {
+  const out: IndicoSession[] = [];
+  for (const e of entries) {
+    const room = e.room || parentRoom || undefined;
+    const children: any[] = Object.values(e.entries ?? {});
+    if (e.entryType === 'Session' && children.length > 0) {
+      out.push(...timetableExtras(children, room));
+      continue;
+    }
+    if (e.entryType !== 'Break' && e.entryType !== 'Session') continue;
+    const start = toDate(e.startDate);
+    const end = toDate(e.endDate);
+    if (!start || !end || !e.title) continue;
+    out.push({
+      id: String(e.id),
+      kind: e.entryType === 'Break' ? 'break' : 'talk',
+      title: e.slotTitle ? `${e.title} - ${e.slotTitle}` : e.title,
+      speakers: [],
+      room,
+      start,
+      end,
+    });
+  }
+  return out;
+}
+
+async function load(eventId: number): Promise<IndicoData> {
+  const [json, timetable] = await Promise.all([
+    getJson(`/export/event/${eventId}.json?detail=contributions`),
+    getJson(`/export/timetable/${eventId}.json`),
+  ]);
+  const contribs: any[] = json?.results?.[0]?.contributions ?? [];
+  const days: Record<string, Record<string, any>> = timetable?.results?.[eventId] ?? {};
+
+  const sessions: IndicoSession[] = timetableExtras(
+    Object.values(days).flatMap((day) => Object.values(day)),
+  );
 
   for (const c of contribs) {
     const speakerList: any[] = Array.isArray(c.speakers) ? c.speakers : [];
@@ -56,6 +93,7 @@ async function load(eventId: number): Promise<IndicoData> {
     if (!start || !end) continue;
     sessions.push({
       id: String(c.id),
+      kind: 'talk',
       title: c.title,
       speakers: speakerList.map(speakerName).filter(Boolean),
       track: c.track || undefined,
@@ -66,7 +104,10 @@ async function load(eventId: number): Promise<IndicoData> {
     });
   }
 
-  sessions.sort((a, b) => a.start.getTime() - b.start.getTime());
+  sessions.sort(
+    (a, b) =>
+      a.start.getTime() - b.start.getTime() || (a.room ?? '').localeCompare(b.room ?? ''),
+  );
   return { sessions };
 }
 

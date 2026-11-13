@@ -56,7 +56,12 @@ for (const s of sessions) {
               <h2 class="h-md">{label}</h2>
               <ul class="sessions">
                 {items.map((s) => (
-                  <li class="p-card session">
+                  <li
+                    class:list={[
+                      s.kind === "break" ? "p-card--overlay" : "p-card",
+                      "session",
+                    ]}
+                  >
                     <span class="session__time">
                       {timeIST(s.start)}–{timeIST(s.end)}
                     </span>
@@ -70,17 +75,19 @@ for (const s of sessions) {
                           s.title
                         )}
                       </h3>
-                      <p class="session__meta">
-                        {s.speakers.length > 0 && (
-                          <a href={url(`/events/${slug}/speakers`)}>
-                            {s.speakers.join(", ")}
-                          </a>
-                        )}
-                        {s.track && (
-                          <span class="session__track">{s.track}</span>
-                        )}
-                        {s.room && <span>{s.room}</span>}
-                      </p>
+                      {(s.speakers.length > 0 || s.track || s.room) && (
+                        <p class="session__meta">
+                          {s.speakers.length > 0 && (
+                            <a href={url(`/events/${slug}/speakers`)}>
+                              {s.speakers.join(", ")}
+                            </a>
+                          )}
+                          {s.track && (
+                            <span class="session__track">{s.track}</span>
+                          )}
+                          {s.room && <span>{s.room}</span>}
+                        </p>
+                      )}
                     </div>
                   </li>
                 ))}
